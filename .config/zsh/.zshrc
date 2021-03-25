@@ -12,9 +12,6 @@ compile_or_recompile "${ZDOTDIR}/.zshrc"
 # rehash path after pacman installation
 TRAPUSR1() { rehash }
 
-# Remove path duplicates
-typeset -U PATH
-
 #
 # Input/output
 #
