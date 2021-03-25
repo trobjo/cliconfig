@@ -291,9 +291,7 @@ else
     alias Qtdq='sudo apt autoremove'
 fi
 
-alias install='touch ~/.gitignore && echo ".dotfiles" >> .gitignore && git clone --bare "https://git.sr.ht/~troels/dotfiles/" $HOME/.dotfiles && /usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME checkout --force'
-
-alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
+alias cliconfig='/usr/bin/git --git-dir=$HOME/.cliconfig/ --work-tree=$HOME'
 
 if command -v exa &> /dev/null
 then
