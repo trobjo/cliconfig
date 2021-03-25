@@ -29,7 +29,7 @@ if [[ ! -d ${ZDOTDIR} ]]; then
     INSTALLCMD="rm $HOME/.zshenv &&\
     git clone --bare https://github.com/trobjo/cliconfig $HOME/.cliconfig &&\
     /usr/bin/git --git-dir=$HOME/.cliconfig/ --work-tree=$HOME config --local core.bare false &&\
-    /usr/bin/git --git-dir=$HOME/.cliconfig/ --work-tree=$HOME config --local core.worktree "/home/tb" &&\
+    /usr/bin/git --git-dir=$HOME/.cliconfig/ --work-tree=$HOME config --local core.worktree "$HOME" &&\
     /usr/bin/git --git-dir=$HOME/.cliconfig/ --work-tree=$HOME checkout &&\
     source $ZDOTDIR/.zshrc"
 fi
