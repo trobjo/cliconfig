@@ -19,9 +19,12 @@ export TEZOS_CLIENT_UNSAFE_DISABLE_DISCLAIMER=yes
 
 
 export ZDOTDIR=(${XDG_CONFIG_HOME:-$HOME/.config}/zsh)
+
 if [[ ! -d ${ZDOTDIR} ]]; then
     INSTALLCMD="rm $HOME/.zshenv &&\
     git clone --bare https://github.com/trobjo/dotfiles $HOME/.dotfiles &&\
+    /usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME config --local core.bare false &&\
+    /usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME config --local core.worktree "/home/tb" &&\
     /usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME checkout &&\
     source $ZDOTDIR/.zshrc"
 fi
