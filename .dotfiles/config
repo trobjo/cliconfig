@@ -1,0 +1,13 @@
+[core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	worktree = /home/tb
+[status]
+	showUntrackedFiles = no
+[remote "origin"]
+	url = git@github.com:trobjo/dotfiles.git
+	fetch = +refs/heads/*:refs/remotes/origin/*
+[branch "master"]
+	remote = origin
+	merge = refs/heads/master
