@@ -300,9 +300,10 @@ then
     alias ee='exa --group-directories-first --long --git'
     alias ea='exa --group-directories-first --long --git --all'
 else
-    alias ea='ls --group-directories-first --color=auto --all'
-    alias ee='ls --group-directories-first --color=auto -1l'
-    alias e='ls --group-directories-first --color=auto'
+    alias ea='ls --color=auto --group-directories-first --all'
+    alias es='ls --color=auto -lt'
+    alias ee='ls --color=auto --group-directories-first -l'
+    alias e='ls --color=auto --group-directories-first'
 fi
 
 alias rgg='rg --no-ignore-vcs --hidden'
