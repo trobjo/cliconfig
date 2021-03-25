@@ -1,0 +1,12 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhistcnt =7
+let g:netrw_dirhist_7='/home/tb/scripts'
+let g:netrw_dirhist_6='/home/tb/Pilatus.Bank/Pilatus.Bank.AssetIntegrations'
+let g:netrw_dirhist_5='/home/tb/.config/nvim'
+let g:netrw_dirhist_4='/home/tb/Pilatus.Bank/Pilatus.Bank.WS/ClientApp/src/_components'
+let g:netrw_dirhist_3='/home/tb/Pilatus.Bank/Pilatus.Bank.WS/ClientApp/src'
+let g:netrw_dirhist_2='/home/tb/Pilatus.Bank/Pilatus.Bank.WS/ClientApp/src/_actions'
+let g:netrw_dirhist_1='/home/tb/Pilatus.Bank/Pilatus.Bank.WS/ClientApp/src'
+let g:netrw_dirhist_0='/home/tb/Pilatus.Bank/Pilatus.Bank.WS/ClientApp/src/components'
+let g:netrw_dirhist_9='/home/tb/Pilatus.Bank/Pilatus.Bank.WS/ClientApp/src'
+let g:netrw_dirhist_8='/home/tb/Pilatus.Bank/Pilatus.Bank.WS/ClientApp/src/components'
