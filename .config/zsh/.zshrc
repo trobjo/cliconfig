@@ -112,9 +112,11 @@ stty -ixon quit undef           # For Vim etc; above is just for zsh.
 if [[ ! -f ${ZDOTDIR}/zgen/zgen.zsh ]]; then
     print -P "%F{5}Installing %F{33}Z.lua%F{5}…%f"
     command mkdir -p "${HOME}/.local/bin"
-    command curl --silent 'https://raw.githubusercontent.com/trobjo/czmod-compiled/master/czmod' > "${HOME}/.local/bin/czmod"
-    command chmod +x "${HOME}/.local/bin/czmod"
-    command curl --silent 'https://raw.githubusercontent.com/skywind3000/z.lua/master/z.lua' > "${ZDOTDIR}/z.lua"
+    command curl --silent 'https://raw.githubusercontent.com/trobjo/czmod-compiled/master/czmod' > "${HOME}/.local/bin/czmod" &&\
+    command chmod +x "${HOME}/.local/bin/czmod" &&\
+    command curl --silent 'https://raw.githubusercontent.com/skywind3000/z.lua/master/z.lua' > "${ZDOTDIR}/z.lua" &&\
+        print -P "%F{2}%{\e[3m%}Z.lua installed successfully.%f%b" || \
+        print -P "%F{2}%{\e[3m%}The clone has failed.%f%b"
 
 
     print -P "%F{5}Installing the %F{33}Zgen%F{5} Plugin Manager…%f"
