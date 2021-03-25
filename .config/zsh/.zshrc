@@ -134,15 +134,23 @@ if [[ -f ${ZDOTDIR}/zgen/zgen.zsh ]]; then
     ZGEN_DIR="${ZDOTDIR}/zgen"
     source "${ZDOTDIR}/zgen/zgen.zsh"
 
-    zgen load le0me55i/zsh-extract
-    zgen load trobjo/zsh-file-opener
+    # if the init scipt doesn't exist
+    if ! zgen saved; then
+        zgen load le0me55i/zsh-extract
+        zgen load trobjo/zsh-file-opener
 
-    zgen load trobjo/zsh-goodies
-    zgen load trobjo/zsh-prompt-compact
-    [ $WAYLAND_DISPLAY ] && zgen load trobjo/zsh-wayland-utils
-    command -v fzf &> /dev/null && zgen load trobjo/zsh-fzf-functions
+        zgen load trobjo/zsh-goodies
+        zgen load trobjo/zsh-prompt-compact
+        [ $WAYLAND_DISPLAY ] && zgen load trobjo/zsh-wayland-utils
+        command -v fzf &> /dev/null && zgen load trobjo/zsh-fzf-functions
 
-    zgen load zsh-users/zsh-autosuggestions
+        zgen load zsh-users/zsh-autosuggestions
+        zgen load zsh-users/zsh-syntax-highlighting
+
+        # save all to init script
+        zgen save
+    fi
+
     ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(go_home toggle_info bracketed-paste-url-magic url-quote-magic repeat-last-command-or-complete-entry expand-or-complete)
     ZSH_AUTOSUGGEST_IGNORE_WIDGETS[$ZSH_AUTOSUGGEST_IGNORE_WIDGETS[(i)yank]]=()
     ZSH_AUTOSUGGEST_ACCEPT_WIDGETS+=(nice-escape)
@@ -152,15 +160,26 @@ if [[ -f ${ZDOTDIR}/zgen/zgen.zsh ]]; then
     export KEYTIMEOUT=1
     bindkey -e '\e' autosuggest-execute
 
-    zgen load zsh-users/zsh-syntax-highlighting
+    #
+    ### ZLUA config
+    #
+    # use h instead of z as that is the easiest key to reach on dvorak
+    _ZL_CMD=h
+    export _ZL_DATA=${ZDOTDIR}/zlua_data
+
+    eval "$(lua ${ZDOTDIR}/z.lua --init zsh enhanced once)"
+
+    _zlua_precmd() {
+        (czmod --add "${PWD:a}" &)
+    }
+
 fi
+
+
 
 #
 # Completion enhancements
 #
-
-# Load The Prompt System And Completion System And Initilize Them.
-autoload -Uz compinit
 
 # Load And Initialize The Completion System Ignoring Insecure Directories With A
 # Cache Time Of 20 Hours, So It Should Almost Always Regenerate The First Time A
@@ -173,24 +192,6 @@ else
     compinit -i
 fi
 unset _comp_files
-
-#
-### ZLUA config
-#
-
-# use h instead of z as that is the easiest key to reach on dvorak
-_ZL_CMD=h
-export _ZL_DATA=${ZDOTDIR}/zlua_data
-
-eval "$(lua ${ZDOTDIR}/z.lua --init zsh enhanced once)"
-_zlua_precmd() {
-  (czmod --add "${PWD:a}" &)
-}
-
-
-#
-# Completion module options
-#
 
 # Group matches and describe.
 zstyle ':completion:*:*:*:*:*' menu select
