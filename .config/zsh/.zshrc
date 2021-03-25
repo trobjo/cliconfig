@@ -350,7 +350,7 @@ alias -g onerr=" & 1> /dev/null"
 alias -g stdboth="2>&1"
 
 
-if [ -z "$TMUX" ] && [ ${UID} != 0 ] && [[ $SSH_TTY ]] && which tmux >/dev/null 2>&1
-then
-    tmux new-session -A -s main
-fi
+# if [ -z "$TMUX" ] && [ ${UID} != 0 ] && [[ $SSH_TTY ]] && which tmux >/dev/null 2>&1
+# then
+#     tmux new-session -A -s main
+# fi
