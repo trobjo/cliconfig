@@ -28,7 +28,7 @@ export TEZOS_CLIENT_UNSAFE_DISABLE_DISCLAIMER=yes
 export ZDOTDIR=(${XDG_CONFIG_HOME:-$HOME/.config}/zsh)
 
 if [[ ! -d ${ZDOTDIR} ]]; then
-    INSTALLCMD="rm $HOME/.zshenv &&\
+    INSTALLCMD="rm -f $HOME/.zshenv $HOME/.gitignore &&\
     git clone --bare https://github.com/trobjo/cliconfig $HOME/.cliconfig &&\
     /usr/bin/git --git-dir=$HOME/.cliconfig/ --work-tree=$HOME config --local core.bare false &&\
     /usr/bin/git --git-dir=$HOME/.cliconfig/ --work-tree=$HOME config --local core.worktree "$HOME" &&\
