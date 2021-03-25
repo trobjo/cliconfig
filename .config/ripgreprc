@@ -1,0 +1,14 @@
+--context-separator
+...
+--smart-case
+--colors
+match:bg:16
+--colors
+match:fg:20
+--colors
+line:fg:18
+--colors
+line:style:nobold
+--colors
+path:fg:4
+--no-messages
