@@ -35,4 +35,3 @@ if [[ ! -d ${ZDOTDIR} ]]; then
     /usr/bin/git --git-dir=$HOME/.cliconfig/ --work-tree=$HOME checkout &&\
     source $ZDOTDIR/.zshrc"
 fi
-

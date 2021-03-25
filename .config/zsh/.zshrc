@@ -35,6 +35,10 @@ forward-word() { [ $POSTDISPLAY ] && zle .forward-word || zle vi-forward-blank-w
 zle -N forward-word
 bindkey "^[b" vi-backward-blank-word
 
+# Use smart URL pasting and escaping.
+autoload -Uz bracketed-paste-url-magic url-quote-magic
+zle -N bracketed-paste bracketed-paste-url-magic
+zle -N self-insert url-quote-magic
 
 if (( ${+terminfo[smkx]} && ${+terminfo[rmkx]} )); then
   # Enable application mode when zle is active
@@ -243,13 +247,6 @@ zstyle -e ':completion:*:*:ssh:*:my-accounts' users-hosts \
 # # makes sure .subtitles are not part of the tab completion when using u()
 zstyle ':completion:*:*:u:*' file-patterns '^*.(srt|part|ytdl|vtt|log):source-files' '*:all-files'
 zstyle ':completion:*:*:cast:*' file-patterns '*.mkv:all-files'
-
-# Use smart URL pasting and escaping.
-autoload -Uz bracketed-paste-url-magic url-quote-magic
-zle -N bracketed-paste bracketed-paste-url-magic
-zle -N self-insert url-quote-magic
-
-
 
 if command -v pacman &> /dev/null
 then
