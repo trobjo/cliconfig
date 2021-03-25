@@ -112,9 +112,9 @@ stty -ixon quit undef           # For Vim etc; above is just for zsh.
 if [[ ! -f ${ZDOTDIR}/zgen/zgen.zsh ]]; then
     print -P "%F{5}Installing %F{33}Z.lua%F{5}…%f"
     command mkdir -p "${HOME}/.local/bin"
-    command curl 'https://raw.githubusercontent.com/trobjo/czmod-compiled/master/czmod' > "${HOME}/.local/bin/czmod"
+    command curl --progress-bar 'https://raw.githubusercontent.com/trobjo/czmod-compiled/master/czmod' > "${HOME}/.local/bin/czmod"
     command chmod +x "${HOME}/.local/bin/czmod"
-    command curl 'https://raw.githubusercontent.com/skywind3000/z.lua/master/z.lua' > "${ZDOTDIR}/z.lua"
+    command curl --progress-bar 'https://raw.githubusercontent.com/skywind3000/z.lua/master/z.lua' > "${ZDOTDIR}/z.lua"
 
 
     print -P "%F{5}Installing the %F{33}Zgen%F{5} Plugin Manager…%f"
