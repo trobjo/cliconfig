@@ -122,7 +122,6 @@ if [[ ! -f ${ZDOTDIR}/zgen/zgen.zsh ]]; then
         print -P "%F{2}%{\e[3m%}Z.lua installed successfully.%f%b" || \
         print -P "%F{2}%{\e[3m%}The clone has failed.%f%b"
 
-
     print -P "%F{5}Installing the %F{33}Zgen%F{5} Plugin Manager…%f"
     command mkdir -p "$ZDOTDIR/zgen" && command chmod g-rwX "${ZDOTDIR}/zgen"
     command git clone https://github.com/tarjoilija/zgen.git "${ZDOTDIR}/zgen" && \
@@ -145,36 +144,19 @@ if [[ -f ${ZDOTDIR}/zgen/zgen.zsh ]]; then
         command -v fzf &> /dev/null && zgen load trobjo/zsh-fzf-functions
 
         zgen load zsh-users/zsh-autosuggestions
+        zgen load trobjo/zsh-autosuggestions-override
+
         zgen load zsh-users/zsh-syntax-highlighting
 
         # save all to init script
         zgen save
     fi
 
-    ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(go_home toggle_info bracketed-paste-url-magic url-quote-magic repeat-last-command-or-complete-entry expand-or-complete)
+    ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(go_home bracketed-paste-url-magic url-quote-magic
+                                    repeat-last-command-or-complete-entry expand-or-complete)
     ZSH_AUTOSUGGEST_IGNORE_WIDGETS[$ZSH_AUTOSUGGEST_IGNORE_WIDGETS[(i)yank]]=()
-    ZSH_AUTOSUGGEST_ACCEPT_WIDGETS+=(nice-escape)
-    ZSH_AUTOSUGGEST_STRATEGY=(history)
     ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=fg=5,underline
-
-    export KEYTIMEOUT=1
-    bindkey -e '\e' autosuggest-execute
-
-    #
-    ### ZLUA config
-    #
-    # use h instead of z as that is the easiest key to reach on dvorak
-    _ZL_CMD=h
-    export _ZL_DATA=${ZDOTDIR}/zlua_data
-
-    eval "$(lua ${ZDOTDIR}/z.lua --init zsh enhanced once)"
-
-    _zlua_precmd() {
-        (czmod --add "${PWD:a}" &)
-    }
-
 fi
-
 
 
 #
@@ -192,6 +174,19 @@ else
     compinit -i
 fi
 unset _comp_files
+
+#
+### ZLUA config
+#
+# use h instead of z as that is the easiest key to reach on dvorak
+_ZL_CMD=h
+export _ZL_DATA=${ZDOTDIR}/zlua_data
+
+eval "$(lua ${ZDOTDIR}/z.lua --init zsh enhanced once)"
+
+_zlua_precmd() {
+    (czmod --add "${PWD:a}" &)
+}
 
 # Group matches and describe.
 zstyle ':completion:*:*:*:*:*' menu select
@@ -244,9 +239,6 @@ zstyle ':completion:*:rm:*' file-patterns '*:all-files'
 zstyle -e ':completion:*:*:ssh:*:my-accounts' users-hosts \
 '[[ -f ${HOME}/.ssh/config && ${key} == hosts ]] && key=my_hosts reply=()'
 
-
-# # makes sure .subtitles are not part of the tab completion when using u()
-zstyle ':completion:*:*:u:*' file-patterns '^*.(srt|part|ytdl|vtt|log):source-files' '*:all-files'
 zstyle ':completion:*:*:cast:*' file-patterns '*.mkv:all-files'
 
 if command -v pacman &> /dev/null
@@ -266,13 +258,6 @@ then
     alias Qqs='yay -Qqs'
     alias Qq='yay -Qq'
     alias Qtdq='yay -Rsn $(pacman -Qtdq)'
-    alias reboot='dbus-send --system --print-reply --dest=org.freedesktop.login1 /org/freedesktop/login1 "org.freedesktop.login1.Manager.Reboot" boolean:true'
-
-    alias findip='curl -s icanhazip.com | tee /dev/tty | wl-copy -n'
-    alias swaymsg='noglob swaymsg'
-    # alias toggleTP='swaymsg input "1739:52552:SYNA1D31:00_06CB:CD48_Touchpad" events toggle disabled enabled'
-    alias dvorak='swaymsg input "1:1:AT_Translated_Set_2_keyboard" xkb_layout us(dvorak)'
-    alias qwerty='swaymsg input "1:1:AT_Translated_Set_2_keyboard" xkb_layout us'
 else
     alias -g fd='fdfind'
     alias -g Syu='sudo apt update && sudo apt upgrade'
@@ -289,7 +274,14 @@ else
     alias Qtdq='sudo apt autoremove'
 fi
 
-alias cliconfig='/usr/bin/git --git-dir=$HOME/.cliconfig/ --work-tree=$HOME'
+[ -d $HOME/.cliconfig ] && alias cliconfig='/usr/bin/git --git-dir=$HOME/.cliconfig/ --work-tree=$HOME'
+if [ ! -z $SWAYSOCK ]; then
+    alias reboot='dbus-send --system --print-reply --dest=org.freedesktop.login1 /org/freedesktop/login1 "org.freedesktop.login1.Manager.Reboot" boolean:true'
+    alias swaymsg='noglob swaymsg'
+    # alias toggleTP='swaymsg input "1739:52552:SYNA1D31:00_06CB:CD48_Touchpad" events toggle disabled enabled'
+    alias dvorak='swaymsg input "1:1:AT_Translated_Set_2_keyboard" xkb_layout us(dvorak)'
+    alias qwerty='swaymsg input "1:1:AT_Translated_Set_2_keyboard" xkb_layout us'
+fi
 
 if command -v exa &> /dev/null
 then
@@ -308,6 +300,7 @@ alias rgg='rg --no-ignore-vcs --hidden'
 alias fdd='fd --no-ignore-vcs --hidden'
 alias has='transmission-remote -l'
 alias df='df -h'
+alias findip='curl -s icanhazip.com | tee >(wl-copy -n -- 2> /dev/null || exit 0)'
 
 
 # Git aliases
