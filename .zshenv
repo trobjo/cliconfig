@@ -1,13 +1,15 @@
-export PATH=$HOME/.local/bin:${PATH}
-
 # Remove path duplicates
-typeset -U PATH
+typeset -U PATH path
+path=("$HOME/.local/bin" "$path[@]")
+export PATH
+
 
 export LESS_TERMCAP_md=$'\E[1;34m'   # Begins bold.
 export LESS_TERMCAP_me=$'\E[0m'      # Ends mode.
-export LESS="-F -g -i -M -R -w -z-4"
-export PAGER=less
+export LESS="-F -g -i -M -R -w -z-4 -X"
 
+
+export PAGER=less
 export BAT_THEME=base16
 
 # see https://the.exa.website/docs/colour-themes
