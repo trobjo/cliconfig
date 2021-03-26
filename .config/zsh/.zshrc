@@ -430,13 +430,13 @@ asynchronous_plugins=(le0me55i/zsh-extract│extract.plugin.zsh\
 
 plugin_manager load ${synchronous_plugins}
 
-# autoload -Uz is-at-least
-# if is-at-least 5.8; then
+autoload -Uz is-at-least
+if is-at-least 5.8; then
     fpath+=("${ZDOTDIR}/plugins/romkatv/zsh-defer/")
     autoload -Uz zsh-defer
-# else
-    # source "${ZDOTDIR}/plugins/romkatv/zsh-defer/zsh-defer.plugin.zsh"
-# fi
+else
+    source "${ZDOTDIR}/plugins/romkatv/zsh-defer/zsh-defer.plugin.zsh"
+fi
 
 zsh-defer -1 plugin_manager load ${asynchronous_plugins}
 
