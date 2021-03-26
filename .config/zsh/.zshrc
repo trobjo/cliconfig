@@ -112,138 +112,6 @@ stty -ixon quit undef           # For Vim etc; above is just for zsh.
 #
 # COMPLETION
 #
-
-if [[ ! -d ${ZDOTDIR}/plugins ]]; then
-
-    print -P "%F{5}Installing %F{33}Z.lua%F{5}…%f"
-    command mkdir -p "${HOME}/.local/bin"
-    command curl --silent 'https://raw.githubusercontent.com/trobjo/czmod-compiled/master/czmod' > "${HOME}/.local/bin/czmod" &&\
-    command chmod +x "${HOME}/.local/bin/czmod" &&\
-    command curl --silent 'https://raw.githubusercontent.com/skywind3000/z.lua/master/z.lua' > "${ZDOTDIR}/z.lua" &&\
-        print -P "%F{2}%{\e[3m%}Z.lua installed successfully.%f%b" || \
-        print -P "%F{2}%{\e[3m%}The clone has failed.%f%b"
-
-    print -P "%F{5}Installing the %F{33}zsh-defer%F{5} Plugin Manager…%f"
-    command mkdir -p "$ZDOTDIR/plugins" && command chmod g-rwX "${ZDOTDIR}/plugins"
-    command git clone https://github.com/romkatv/zsh-defer.git "${ZDOTDIR}/zsh-defer" && \
-        print -P "%F{2}%{\e[3m%}ZSH defer installed successfully.%f%b" || \
-        print -P "%F{1}%{\e[3m%}ZSH defer failed to install.%f%b"
-fi
-
-if [[ -d ${ZDOTDIR}/plugins ]]; then
-    source "${ZDOTDIR}/zsh-defer/zsh-defer.plugin.zsh"
-
-    # plugin_manager documentation:
-    # arguments can be passed to plugin_manager separated by ':'.
-    # The second field is the name of the file to source if it is
-    # named differently than the plugin. The third field may contain
-    # a command that must return exit code 0 for the plugin to load.
-    # For example, you can avoid loading plugins if dependencies are
-    # not found in $PATH.
-    plugin_manager() {
-        local myarr=($@)
-
-        if [[ "${1}" == "remove" ]]; then
-
-            myarr=($synchronous_plugins $asynchronous_plugins)
-            local filelist=($(cd ${ZDOTDIR}/plugins; find * -type d -path '*/*' -prune -print))
-
-            local parts
-            for plug in "${myarr[@]}"; do
-                parts=("${(@s[:])plug}")
-                filelist=(${filelist[@]//*${parts[1]}*})
-            done
-
-            for elem in "${filelist[@]}"; do
-                rm -rf "${ZDOTDIR}/plugins/${elem}"
-                printf "Removed \x1B[31m\033[3m${elem}\033[0m …\n"
-            done
-
-            printf "Removed \x1B[31m\033[1m${#filelist}\033[0m elements\n"
-            return
-        fi
-
-        # we construct an array if only 1 arg is given.
-        # to be run interactively
-        if [[ ${#myarr[@]} -eq 1 ]]; then
-            myarr+=($synchronous_plugins $asynchronous_plugins)
-        fi
-
-        local filetosource
-        local plugin
-        for plugin in "${myarr[@]:1}"; do
-            # split strings by args
-            parts=("${(@s[:])plugin}")
-
-            if [[ ! -z ${parts[2]} ]]; then
-                filetosource=${parts[2]}
-            else
-                filetosource=${parts[1]}
-            fi
-
-            if [[ ! -z ${parts[3]} ]] && [[ ! $(eval ${parts[3]}) ]]; then
-                    continue
-            fi
-
-            local dir="${ZDOTDIR}/plugins/${parts[1]%%/*}"
-            if [[ ! -d "$dir" ]]; then
-                mkdir -p "$dir"
-            fi
-
-            local plugindir="${ZDOTDIR}/plugins/${parts[1]}"
-            local pluginfile="${plugindir}/${${filetosource##*/}//.zsh/}.zsh"
-
-            case "${1}" in
-                (update|pull)
-                    printf "Updating \x1B[35m\033[3m${(r:38:)parts[1]}\033[0m… "
-                    git -C ${plugindir} pull
-                    ;;
-                (install)
-                    if [[ ! -f $pluginfile ]]; then
-                    printf "Installing \x1B[35m\033[3m${parts[1]}\033[0m …\n"
-                    git clone https://github.com/${parts[1]}.git ${plugindir} 2> /dev/null
-                    fi
-                    ;;
-                (*)
-                ;;
-            esac
-
-            compile_or_recompile "$pluginfile"
-            source "$pluginfile"
-        done
-    }
-
-    synchronous_plugins=(trobjo/zsh-prompt-compact\
-                          zsh-users/zsh-autosuggestions)
-
-    asynchronous_plugins=(le0me55i/zsh-extract:"extract.plugin.zsh"\
-             trobjo/zsh-goodies\
-             trobjo/zsh-file-opener\
-             trobjo/zsh-fzf-functions::"command -v fzf" \
-             trobjo/zsh-wayland-utils::"printf \$WAYLAND_DISPLAY"\
-             trobjo/zsh-autosuggestions-override\
-             zsh-users/zsh-syntax-highlighting)
-
-    plugin_manager install ${synchronous_plugins}
-    zsh-defer +1 plugin_manager install ${asynchronous_plugins}
-
-    ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(go_home bracketed-paste-url-magic url-quote-magic
-                                    repeat-last-command-or-complete-entry expand-or-complete)
-    ZSH_AUTOSUGGEST_IGNORE_WIDGETS[$ZSH_AUTOSUGGEST_IGNORE_WIDGETS[(i)yank]]=()
-    ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=fg=5,underline
-
-    zsh-defer eval "$(lua ${ZDOTDIR}/z.lua --init zsh enhanced once)"
-    ### ZLUA config
-    _ZL_CMD=h
-    export _ZL_DATA=${ZDOTDIR}/zlua_data
-    _zlua_precmd() {(czmod --add "${PWD:a}" &) }
-fi
-
-
-
-#
-# Completion enhancements
-#
 autoload -Uz compinit
 
 # Load And Initialize The Completion System Ignoring Insecure Directories With A
@@ -314,6 +182,7 @@ zstyle ':completion:*:*:cast:*' file-patterns '*.mkv:all-files'
 #
 ## ALIASES
 #
+
 if command -v pacman &> /dev/null
 then
     alias Syu='yay -Syu --devel'
@@ -424,6 +293,145 @@ alias -g stdboth="2>&1"
 #
 ## PLUGIN MANAGER
 #
+
+if [[ ! -d ${ZDOTDIR}/plugins ]]; then
+    command mkdir -p "$ZDOTDIR/plugins" &&\
+    command chmod g-rwX "${ZDOTDIR}/plugins"
+fi
+
+# plugin_manager documentation:
+# arguments can be passed to plugin_manager separated by ':'.
+# The second field is the name of the file to source if it is
+# named differently than the plugin. The third field may contain
+# a command that must return exit code 0 for the plugin to load.
+# For example, you can avoid loading plugins if dependencies are
+# not found in $PATH.
+# The fourth field contains post-install hooks.
+plugin_manager() {
+    local myarr=($@)
+    set --
+
+    if [[ "${myarr[1]}" == "remove" ]]; then
+
+        myarr=(${synchronous_plugins%%│*} ${asynchronous_plugins%%│*})
+        local filelist=($(cd ${ZDOTDIR}/plugins; find * -type d -path '*/*' -prune -print))
+
+        local parts
+        for plug in "${myarr[@]}"; do
+            parts=("${(@s[:])plug}")
+            filelist=(${filelist[@]//*${parts[1]}*})
+        done
+
+        for elem in "${filelist[@]}"; do
+            rm -rf "${ZDOTDIR}/plugins/${elem}"
+            printf "Removed \x1B[31m\033[3m${elem}\033[0m …\n"
+        done
+
+        printf "Removed \x1B[31m\033[1m${#filelist}\033[0m elements\n"
+        return
+    fi
+
+    # we construct an array if only 1 arg is given.
+    # to be run interactively
+    if [[ ${#myarr[@]} -eq 1 ]]; then
+        myarr+=($synchronous_plugins $asynchronous_plugins)
+    fi
+
+    local filetosource
+    local plugin
+    local pluginfile
+    for plugin in "${myarr[@]:1}"; do
+        # split strings by args
+        parts=("${(@s[│])plugin}")
+
+        if [[ ! -z ${parts[3]} ]]; then
+            eval "${parts[3]}" > /dev/null 2>&1 || continue
+        fi
+
+        local dir="${ZDOTDIR}/plugins/${parts[1]%%/*}"
+        if [[ ! -d "$dir" ]]; then
+            mkdir -p "$dir"
+        fi
+
+        local plugindir="${ZDOTDIR}/plugins/${parts[1]}"
+
+        case "${myarr[1]}" in
+            (update|pull)
+                printf "Updating \x1B[35m\033[3m${(r:40:: :)parts[1]} "
+                printf "\033[0m … \x1B[32m"
+                git -C ${plugindir} pull &&\
+                printf "\033[0m" ||\
+                printf "\r\x1B[31mFailed to install \x1B[35m\033[3m${parts[1]}\033[0m\n"
+                ;;
+            (install|load)
+                if [[ ! -d $plugindir ]]; then
+                    printf "\rInstalling \x1B[35m\033[3m${(r:39:)parts[1]}\033[0m … " &&\
+                    git clone https://github.com/${parts[1]}.git ${plugindir} 2> /dev/null &&\
+                    printf "\x1B[32m\033[3mSucces\033[0m!\n" ||\
+                    printf "\r\x1B[31mFailed to install \x1B[35m\033[3m${parts[1]}\033[0m\n"
+                    if [[ ! -z ${parts[5]} ]]; then
+                        printf "\rRunning post-install hooks for \x1B[35m\033[3m${(r:19:)parts[1]##*/}\033[0m … " &&\
+                        eval "${parts[5]}" &&\
+                        printf "\x1B[32m\033[3mSucces\033[0m!\n" ||\
+                        printf "\r\x1B[31mFailed to run post-install hooks for \x1B[35m\033[3m${parts[1]}\033[0m\n"
+                    fi
+                fi
+                ;;
+            (*)
+            ;;
+        esac
+
+
+        # we determine what file to source.
+        if [[ ! -z ${parts[2]} ]]; then
+            pluginfile="${plugindir}/${parts[2]##*/}"
+        else
+            pluginfile="${plugindir}/${parts[1]##*/}.plugin.zsh"
+            if [[ ! -f "${pluginfile}" ]]; then
+                pluginfile="${plugindir}/${${parts[1]##*/}//.zsh/}.zsh"
+            fi
+        fi
+        [ ! -f "${pluginfile}" ] && printf "No file with the name \"${pluginfile##*/}\"\n" && continue
+
+        [[ "${pluginfile##*.}" == "zsh" ]] && compile_or_recompile "$pluginfile"
+        if [[ ! ${parts[4]} == 'nosource' ]]; then
+            source "$pluginfile"
+        fi
+
+        # post load hooks
+        if [[ ! -z ${parts[6]} ]]; then
+            eval "${parts[6]}"
+        fi
+    done
+}
+
+### ZLUA config
+export _ZL_CMD=h
+export _ZL_DATA=${ZDOTDIR}/zlua_data
+
+synchronous_plugins=(romkatv/zsh-defer│││"nosource"\
+                     trobjo/zsh-prompt-compact\
+                     zsh-users/zsh-autosuggestions)
+
+asynchronous_plugins=(le0me55i/zsh-extract│extract.plugin.zsh\
+                      skywind3000/z.lua│z.lua│"command -v lua"│nosource│'mkdir -p "${HOME}/.local/bin" && curl --silent https://raw.githubusercontent.com/trobjo/czmod-compiled/master/czmod > "${HOME}/.local/bin/czmod" && chmod +x "${HOME}/.local/bin/czmod"'│'eval "$(lua ${pluginfile} --init zsh enhanced once); _zlua_precmd() {(czmod --add "${PWD:a}" &) }"'\
+                      trobjo/zsh-goodies\
+                      trobjo/zsh-file-opener\
+                      trobjo/zsh-fzf-functions││'command -v fzf && command -v fd' \
+                      trobjo/zsh-wayland-utils││'printf $WAYLAND_DISPLAY'\
+                      trobjo/zsh-autosuggestions-override\
+                      zsh-users/zsh-syntax-highlighting)
+
+fpath+=("${ZDOTDIR}/plugins/romkatv/zsh-defer/")
+autoload -Uz zsh-defer
+
+plugin_manager load ${synchronous_plugins}
+zsh-defer -1 plugin_manager load ${asynchronous_plugins}
+
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=fg=5,underline
+ZSH_AUTOSUGGEST_IGNORE_WIDGETS[$ZSH_AUTOSUGGEST_IGNORE_WIDGETS[(i)yank]]=()
+ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(go_home bracketed-paste-url-magic url-quote-magic
+                                repeat-last-command-or-complete-entry expand-or-complete)
 
 # if [ -z "$TMUX" ] && [ ${UID} != 0 ] && [[ $SSH_TTY ]] && which tmux >/dev/null 2>&1
 # then
