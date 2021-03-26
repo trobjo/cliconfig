@@ -225,14 +225,14 @@ if [[ -d ${ZDOTDIR}/plugins ]]; then
              zsh-users/zsh-syntax-highlighting)
 
     plugin_manager install ${synchronous_plugins}
-    zsh-defer plugin_manager install ${asynchronous_plugins}
+    zsh-defer +1 plugin_manager install ${asynchronous_plugins}
 
     ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(go_home bracketed-paste-url-magic url-quote-magic
                                     repeat-last-command-or-complete-entry expand-or-complete)
     ZSH_AUTOSUGGEST_IGNORE_WIDGETS[$ZSH_AUTOSUGGEST_IGNORE_WIDGETS[(i)yank]]=()
     ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=fg=5,underline
 
-    zsh-defer +1 eval "$(lua ${ZDOTDIR}/z.lua --init zsh enhanced once)"
+    zsh-defer eval "$(lua ${ZDOTDIR}/z.lua --init zsh enhanced once)"
     ### ZLUA config
     _ZL_CMD=h
     export _ZL_DATA=${ZDOTDIR}/zlua_data
