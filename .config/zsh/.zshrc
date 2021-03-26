@@ -7,7 +7,7 @@ compile_or_recompile() {
     fi
   done
 }
-compile_or_recompile "${ZDOTDIR}/.zshrc"
+compile_or_recompile "${ZDOTDIR}/.zshrc" "${ZDOTDIR}/.zcompdump"
 
 # rehash path after pacman installation
 TRAPUSR1() { rehash }
@@ -141,9 +141,37 @@ if [[ -d ${ZDOTDIR}/plugins ]]; then
     # For example, you can avoid loading plugins if dependencies are
     # not found in $PATH.
     plugin_manager() {
-        local plugin
+        local myarr=($@)
+
+        if [[ "${1}" == "remove" ]]; then
+
+            myarr=($synchronous_plugins $asynchronous_plugins)
+            local filelist=($(cd ${ZDOTDIR}/plugins; find * -type d -path '*/*' -prune -print))
+
+            local parts
+            for plug in "${myarr[@]}"; do
+                parts=("${(@s[:])plug}")
+                filelist=(${filelist[@]//*${parts[1]}*})
+            done
+
+            for elem in "${filelist[@]}"; do
+                rm -rf "${ZDOTDIR}/plugins/${elem}"
+                printf "Removed \x1B[31m\033[3m${elem}\033[0m …\n"
+            done
+
+            printf "Removed \x1B[31m\033[1m${#filelist}\033[0m elements\n"
+            return
+        fi
+
+        # we construct an array if only 1 arg is given.
+        # to be run interactively
+        if [[ ${#myarr[@]} -eq 1 ]]; then
+            myarr+=($synchronous_plugins $asynchronous_plugins)
+        fi
+
         local filetosource
-        for plugin in "$@"; do
+        local plugin
+        for plugin in "${myarr[@]:1}"; do
             # split strings by args
             parts=("${(@s[:])plugin}")
 
@@ -165,10 +193,20 @@ if [[ -d ${ZDOTDIR}/plugins ]]; then
             local plugindir="${ZDOTDIR}/plugins/${parts[1]}"
             local pluginfile="${plugindir}/${${filetosource##*/}//.zsh/}.zsh"
 
-            if [[ ! -f $pluginfile ]]; then
-                /usr/bin/git --git-dir=$HOME/.cliconfig/ --work-tree=$HOME submodule add -b master -f https://github.com/${parts[1]}.git ${plugindir}
-                # /usr/bin/git clone https://github.com/${parts[1]}.git ${plugindir}
-            fi
+            case "${1}" in
+                (update|pull)
+                    printf "Updating \x1B[35m\033[3m${(r:38:)parts[1]}\033[0m… "
+                    git -C ${plugindir} pull
+                    ;;
+                (install)
+                    if [[ ! -f $pluginfile ]]; then
+                    printf "Installing \x1B[35m\033[3m${parts[1]}\033[0m …\n"
+                    git clone https://github.com/${parts[1]}.git ${plugindir} 2> /dev/null
+                    fi
+                    ;;
+                (*)
+                ;;
+            esac
 
             compile_or_recompile "$pluginfile"
             source "$pluginfile"
@@ -186,9 +224,8 @@ if [[ -d ${ZDOTDIR}/plugins ]]; then
              trobjo/zsh-autosuggestions-override\
              zsh-users/zsh-syntax-highlighting)
 
-    plugin_manager ${synchronous_plugins}
-
-    zsh-defer plugin_manager ${asynchronous_plugins}
+    plugin_manager install ${synchronous_plugins}
+    zsh-defer plugin_manager install ${asynchronous_plugins}
 
     ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(go_home bracketed-paste-url-magic url-quote-magic
                                     repeat-last-command-or-complete-entry expand-or-complete)
@@ -200,10 +237,6 @@ if [[ -d ${ZDOTDIR}/plugins ]]; then
     _ZL_CMD=h
     export _ZL_DATA=${ZDOTDIR}/zlua_data
     _zlua_precmd() {(czmod --add "${PWD:a}" &) }
-
-    [ -d $HOME/.cliconfig ] && alias cliconfig='/usr/bin/git --git-dir=$HOME/.cliconfig/ --work-tree=$HOME'
-    [ -d $HOME/.cliconfig ] && alias cliconfig='/usr/bin/git --git-dir=$HOME/.cliconfig/ --work-tree=$HOME'
-
 fi
 
 
@@ -318,6 +351,8 @@ if [ ! -z $SWAYSOCK ]; then
     alias dvorak='swaymsg input "1:1:AT_Translated_Set_2_keyboard" xkb_layout us(dvorak)'
     alias qwerty='swaymsg input "1:1:AT_Translated_Set_2_keyboard" xkb_layout us'
 fi
+
+[ -d $HOME/.cliconfig ] && alias cliconfig='/usr/bin/git --git-dir=$HOME/.cliconfig/ --work-tree=$HOME'
 
 if command -v exa &> /dev/null
 then
