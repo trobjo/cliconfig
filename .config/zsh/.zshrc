@@ -172,6 +172,8 @@ zstyle ':completion:*:history-words' menu yes
 zstyle ':completion:*:(rm|kill|diff):*' ignore-line other
 zstyle ':completion:*:rm:*' file-patterns '*:all-files'
 
+zstyle -e ':completion:*:*:scp:*:my-accounts' users-hosts \
+'[[ -f ${HOME}/.ssh/config && ${key} == hosts ]] && key=my_hosts reply=()'
 # If the _my_hosts function is defined, it will be called to add the ssh hosts
 # completion, otherwise _ssh_hosts will fall through and read the ~/.ssh/config
 zstyle -e ':completion:*:*:ssh:*:my-accounts' users-hosts \
