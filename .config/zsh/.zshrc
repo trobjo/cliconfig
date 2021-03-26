@@ -282,7 +282,11 @@ else
     alias -g SS=' |& subl -'
 fi
 alias -g LL=' |& less'
-alias -g G=' |& rg'
+if command -v rg &> /dev/null; then
+    alias -g G=' |& rg'
+else
+    alias -g G=' |& grep --color=auto'
+fi
 alias -g jsonl=' | jq -C "." | less -R'
 alias -g json=' | jq -C "."'
 
