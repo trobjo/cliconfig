@@ -110,10 +110,11 @@ stty -ixon quit undef           # For Vim etc; above is just for zsh.
 
 
 #
-## Zgen
+## Begin plugin manager
 #
 
-if [[ ! -f ${ZDOTDIR}/zgen/zgen.zsh ]]; then
+if [[ ! -d ${ZDOTDIR}/plugins ]]; then
+
     print -P "%F{5}Installing %F{33}Z.lua%F{5}…%f"
     command mkdir -p "${HOME}/.local/bin"
     command curl --silent 'https://raw.githubusercontent.com/trobjo/czmod-compiled/master/czmod' > "${HOME}/.local/bin/czmod" &&\
@@ -122,46 +123,95 @@ if [[ ! -f ${ZDOTDIR}/zgen/zgen.zsh ]]; then
         print -P "%F{2}%{\e[3m%}Z.lua installed successfully.%f%b" || \
         print -P "%F{2}%{\e[3m%}The clone has failed.%f%b"
 
-    print -P "%F{5}Installing the %F{33}Zgen%F{5} Plugin Manager…%f"
-    command mkdir -p "$ZDOTDIR/zgen" && command chmod g-rwX "${ZDOTDIR}/zgen"
-    command git clone https://github.com/tarjoilija/zgen.git "${ZDOTDIR}/zgen" && \
-        print -P "%F{2}%{\e[3m%}Installation successful.%f%b" || \
-        print -P "%F{2}%{\e[3m%}The clone has failed.%f%b"
+    print -P "%F{5}Installing the %F{33}zsh-defer%F{5} Plugin Manager…%f"
+    command mkdir -p "$ZDOTDIR/plugins" && command chmod g-rwX "${ZDOTDIR}/plugins"
+    command git clone https://github.com/romkatv/zsh-defer.git "${ZDOTDIR}/zsh-defer" && \
+        print -P "%F{2}%{\e[3m%}ZSH defer installed successfully.%f%b" || \
+        print -P "%F{1}%{\e[3m%}ZSH defer failed to install.%f%b"
 fi
 
-if [[ -f ${ZDOTDIR}/zgen/zgen.zsh ]]; then
-    ZGEN_DIR="${ZDOTDIR}/zgen"
-    source "${ZDOTDIR}/zgen/zgen.zsh"
+if [[ -d ${ZDOTDIR}/plugins ]]; then
+    source "${ZDOTDIR}/zsh-defer/zsh-defer.plugin.zsh"
 
-    # if the init scipt doesn't exist
-    if ! zgen saved; then
-        zgen load le0me55i/zsh-extract
-        zgen load trobjo/zsh-file-opener
+    # plugin_manager documentation:
+    # arguments can be passed to plugin_manager separated by ':'.
+    # The second field is the name of the file to source if it is
+    # named differently than the plugin. The third field may contain
+    # a command that must return exit code 0 for the plugin to load.
+    # For example, you can avoid loading plugins if dependencies are
+    # not found in $PATH.
+    plugin_manager() {
+        local plugin
+        local filetosource
+        for plugin in "$@"; do
+            # split strings by args
+            parts=("${(@s[:])plugin}")
 
-        zgen load trobjo/zsh-goodies
-        zgen load trobjo/zsh-prompt-compact
-        [ $WAYLAND_DISPLAY ] && zgen load trobjo/zsh-wayland-utils
-        command -v fzf &> /dev/null && zgen load trobjo/zsh-fzf-functions
+            if [[ ! -z ${parts[2]} ]]; then
+                filetosource=${parts[2]}
+            else
+                filetosource=${parts[1]}
+            fi
 
-        zgen load zsh-users/zsh-autosuggestions
-        zgen load trobjo/zsh-autosuggestions-override
+            if [[ ! -z ${parts[3]} ]] && [[ ! $(eval ${parts[3]}) ]]; then
+                    continue
+            fi
 
-        zgen load zsh-users/zsh-syntax-highlighting
+            local dir="${ZDOTDIR}/plugins/${parts[1]%%/*}"
+            if [[ ! -d "$dir" ]]; then
+                mkdir -p "$dir"
+            fi
 
-        # save all to init script
-        zgen save
-    fi
+            local plugindir="${ZDOTDIR}/plugins/${parts[1]}"
+            local pluginfile="${plugindir}/${${filetosource##*/}//.zsh/}.zsh"
+
+            if [[ ! -f $pluginfile ]]; then
+                /usr/bin/git --git-dir=$HOME/.cliconfig/ --work-tree=$HOME submodule add -b master -f https://github.com/${parts[1]}.git ${plugindir}
+                # /usr/bin/git clone https://github.com/${parts[1]}.git ${plugindir}
+            fi
+
+            compile_or_recompile "$pluginfile"
+            source "$pluginfile"
+        done
+    }
+
+    synchronous_plugins=(trobjo/zsh-prompt-compact\
+                          zsh-users/zsh-autosuggestions)
+
+    asynchronous_plugins=(le0me55i/zsh-extract:"extract.plugin.zsh"\
+             trobjo/zsh-goodies\
+             trobjo/zsh-file-opener\
+             trobjo/zsh-fzf-functions::"command -v fzf" \
+             trobjo/zsh-wayland-utils::"printf \$WAYLAND_DISPLAY"\
+             trobjo/zsh-autosuggestions-override\
+             zsh-users/zsh-syntax-highlighting)
+
+    plugin_manager ${synchronous_plugins}
+
+    zsh-defer plugin_manager ${asynchronous_plugins}
 
     ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(go_home bracketed-paste-url-magic url-quote-magic
                                     repeat-last-command-or-complete-entry expand-or-complete)
     ZSH_AUTOSUGGEST_IGNORE_WIDGETS[$ZSH_AUTOSUGGEST_IGNORE_WIDGETS[(i)yank]]=()
     ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=fg=5,underline
+
+    zsh-defer eval "$(lua ${ZDOTDIR}/z.lua --init zsh enhanced once)"
+    ### ZLUA config
+    _ZL_CMD=h
+    export _ZL_DATA=${ZDOTDIR}/zlua_data
+    _zlua_precmd() {(czmod --add "${PWD:a}" &) }
+
+    [ -d $HOME/.cliconfig ] && alias cliconfig='/usr/bin/git --git-dir=$HOME/.cliconfig/ --work-tree=$HOME'
+    [ -d $HOME/.cliconfig ] && alias cliconfig='/usr/bin/git --git-dir=$HOME/.cliconfig/ --work-tree=$HOME'
+
 fi
+
 
 
 #
 # Completion enhancements
 #
+autoload -Uz compinit
 
 # Load And Initialize The Completion System Ignoring Insecure Directories With A
 # Cache Time Of 20 Hours, So It Should Almost Always Regenerate The First Time A
@@ -174,19 +224,6 @@ else
     compinit -i
 fi
 unset _comp_files
-
-#
-### ZLUA config
-#
-# use h instead of z as that is the easiest key to reach on dvorak
-_ZL_CMD=h
-export _ZL_DATA=${ZDOTDIR}/zlua_data
-
-eval "$(lua ${ZDOTDIR}/z.lua --init zsh enhanced once)"
-
-_zlua_precmd() {
-    (czmod --add "${PWD:a}" &)
-}
 
 # Group matches and describe.
 zstyle ':completion:*:*:*:*:*' menu select
@@ -274,7 +311,6 @@ else
     alias Qtdq='sudo apt autoremove'
 fi
 
-[ -d $HOME/.cliconfig ] && alias cliconfig='/usr/bin/git --git-dir=$HOME/.cliconfig/ --work-tree=$HOME'
 if [ ! -z $SWAYSOCK ]; then
     alias reboot='dbus-send --system --print-reply --dest=org.freedesktop.login1 /org/freedesktop/login1 "org.freedesktop.login1.Manager.Reboot" boolean:true'
     alias swaymsg='noglob swaymsg'
