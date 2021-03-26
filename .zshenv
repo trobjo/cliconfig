@@ -3,6 +3,10 @@ typeset -U PATH path
 path=("$HOME/.local/bin" "$path[@]")
 export PATH
 
+if [[ $SSH_TTY ]]; then
+    export TERM=xterm-256color
+fi
+
 export LESS_TERMCAP_md=$'\E[1;34m'   # Begins bold.
 export LESS_TERMCAP_me=$'\E[0m'      # Ends mode.
 export LESS="-F -g -i -M -R -w -z-4 -X"
