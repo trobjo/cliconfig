@@ -13,7 +13,7 @@ compile_or_recompile "${ZDOTDIR}/.zshrc" "${ZDOTDIR}/.zcompdump"
 TRAPUSR1() { rehash }
 
 #
-# Input/output
+# INPUT/OUTPUT
 #
 
 WORDCHARS=${WORDCHARS//[\/\.&=-]}
@@ -56,7 +56,7 @@ fi
 
 
 #
-# History
+# HISTORY
 #
 
 # do not add incorrect commands to history
@@ -110,7 +110,7 @@ stty -ixon quit undef           # For Vim etc; above is just for zsh.
 
 
 #
-## Begin plugin manager
+# COMPLETION
 #
 
 if [[ ! -d ${ZDOTDIR}/plugins ]]; then
@@ -311,6 +311,9 @@ zstyle -e ':completion:*:*:ssh:*:my-accounts' users-hosts \
 
 zstyle ':completion:*:*:cast:*' file-patterns '*.mkv:all-files'
 
+#
+## ALIASES
+#
 if command -v pacman &> /dev/null
 then
     alias Syu='yay -Syu --devel'
@@ -418,6 +421,9 @@ alias -g noerr="2> /dev/null"
 alias -g onerr=" & 1> /dev/null"
 alias -g stdboth="2>&1"
 
+#
+## PLUGIN MANAGER
+#
 
 # if [ -z "$TMUX" ] && [ ${UID} != 0 ] && [[ $SSH_TTY ]] && which tmux >/dev/null 2>&1
 # then
