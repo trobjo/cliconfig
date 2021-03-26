@@ -428,10 +428,12 @@ asynchronous_plugins=(le0me55i/zsh-extract│extract.plugin.zsh\
                       trobjo/zsh-autosuggestions-override\
                       zsh-users/zsh-syntax-highlighting)
 
+plugin_manager load ${synchronous_plugins}
+
 fpath+=("${ZDOTDIR}/plugins/romkatv/zsh-defer/")
 autoload -Uz zsh-defer
+# source "${ZDOTDIR}/plugins/romkatv/zsh-defer/zsh-defer.plugin.zsh"
 
-plugin_manager load ${synchronous_plugins}
 zsh-defer -1 plugin_manager load ${asynchronous_plugins}
 
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=fg=5,underline
