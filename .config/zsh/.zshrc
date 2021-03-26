@@ -420,7 +420,7 @@ synchronous_plugins=(romkatv/zsh-defer│││"nosource"\
                      zsh-users/zsh-autosuggestions)
 
 asynchronous_plugins=(le0me55i/zsh-extract│extract.plugin.zsh\
-                      skywind3000/z.lua│z.lua│"command -v lua"│nosource│'mkdir -p "${HOME}/.local/bin" && curl --silent https://raw.githubusercontent.com/trobjo/czmod-compiled/master/czmod > "${HOME}/.local/bin/czmod" && chmod +x "${HOME}/.local/bin/czmod"'│'eval "$(lua ${pluginfile} --init zsh enhanced once); _zlua_precmd() {(czmod --add "${PWD:a}" &) }"'\
+                      skywind3000/z.lua│z.lua│"command -v lua"│nosource│'mkdir -p "${HOME}/.local/bin" && curl --silent https://raw.githubusercontent.com/trobjo/czmod-compiled/master/czmod > "${HOME}/.local/bin/czmod" && chmod +x "${HOME}/.local/bin/czmod"'│'eval "$(lua ${pluginfile} --init zsh enhanced once); _zlua_precmd() {(czmod --add "\${PWD:a}" &) }"'\
                       trobjo/zsh-goodies\
                       trobjo/zsh-file-opener\
                       trobjo/zsh-fzf-functions││'command -v fzf && command -v fd' \
