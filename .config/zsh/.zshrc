@@ -402,7 +402,11 @@ alias gf='git fetch'
 
 # stdout in sublime or less, or clipboard
 alias -g CC=' |& tee /dev/tty |& wl-copy -n'
-alias -g SS=' |& subl -'
+if [[ $SSH_TTY ]]; then
+    alias -g SS=' |& rmate -'
+else
+    alias -g SS=' |& subl -'
+fi
 alias -g LL=' |& less'
 alias -g G=' |& rg'
 alias -g jsonl=' | jq -C "." | less -R'
