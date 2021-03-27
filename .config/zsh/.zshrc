@@ -1,13 +1,3 @@
-compile_or_recompile() {
-  local file
-  for file in "$@"; do
-    if [[ -f $file ]] && [[ ! -f ${file}.zwc ]] \
-      || [[ $file -nt ${file}.zwc ]]; then
-      zcompile "$file"
-    fi
-  done
-}
-compile_or_recompile "${ZDOTDIR}/.zshrc" "${ZDOTDIR}/.zcompdump"
 
 # rehash path after pacman installation
 TRAPUSR1() { rehash }
@@ -44,14 +34,14 @@ if (( ${+terminfo[smkx]} && ${+terminfo[rmkx]} )); then
   # Enable application mode when zle is active
   start-application-mode() {
     echoti smkx
-  }
-  stop-application-mode() {
+}
+stop-application-mode() {
     echoti rmkx
-  }
+}
 
-    autoload -Uz add-zle-hook-widget && \
-        add-zle-hook-widget -Uz line-init start-application-mode && \
-        add-zle-hook-widget -Uz line-finish stop-application-mode
+autoload -Uz add-zle-hook-widget && \
+add-zle-hook-widget -Uz line-init start-application-mode && \
+add-zle-hook-widget -Uz line-finish stop-application-mode
 fi
 
 
@@ -218,7 +208,7 @@ else
     alias Qtdq='sudo apt autoremove'
 fi
 
-if [ ! -z $SWAYSOCK ]; then
+if [ -n $SWAYSOCK ]; then
     alias reboot='dbus-send --system --print-reply --dest=org.freedesktop.login1 /org/freedesktop/login1 "org.freedesktop.login1.Manager.Reboot" boolean:true'
     alias swaymsg='noglob swaymsg'
     # alias toggleTP='swaymsg input "1739:52552:SYNA1D31:00_06CB:CD48_Touchpad" events toggle disabled enabled'
@@ -296,26 +286,23 @@ alias -g noerr="2> /dev/null"
 alias -g onerr=" & 1> /dev/null"
 alias -g stdboth="2>&1"
 
-### ZLUA config
-export _ZL_CMD=h
-export _ZL_DATA=${ZDOTDIR}/zlua_data
 
-synchronous_plugins=(trobjo/zsh-plugin-manager│││nosource\
-                     romkatv/zsh-defer│││nosource\
+synchronous_plugins=(trobjo/zsh-plugin-manager│ignorelevel:nosource\
+                     romkatv/zsh-defer│ignorelevel:nosource\
                      trobjo/zsh-prompt-compact\
                      zsh-users/zsh-autosuggestions)
 
-asynchronous_plugins=(le0me55i/zsh-extract│extract.plugin.zsh\
-                      skywind3000/z.lua│z.lua│"command -v lua"│nosource│'mkdir -p "${HOME}/.local/bin" && curl --silent https://raw.githubusercontent.com/trobjo/czmod-compiled/master/czmod > "${HOME}/.local/bin/czmod" && chmod +x "${HOME}/.local/bin/czmod"'│'eval "$(lua ${pluginfile} --init zsh enhanced once); _zlua_precmd() {(czmod --add "\${PWD:a}" &) }"'\
+asynchronous_plugins=(le0me55i/zsh-extract│filename:extract.plugin.zsh\
+                      skywind3000/z.lua│env:"_ZL_CMD=h"│env:"_ZL_DATA=${ZDOTDIR}/zlua_data"│filename:z.lua│if:'command -v lua'│ignorelevel:nosource│postinstall_hook:'mkdir -p "${HOME}/.local/bin" && curl --silent https://raw.githubusercontent.com/trobjo/czmod-compiled/master/czmod > "${HOME}/.local/bin/czmod" && chmod +x "${HOME}/.local/bin/czmod"'│postload_hook:'eval "$(lua ${pluginfile} --init zsh enhanced once); _zlua_precmd() {(czmod --add "\${PWD:a}" &) }"'\
                       trobjo/zsh-goodies\
                       trobjo/zsh-file-opener\
-                      trobjo/zsh-fzf-functions││'command -v fzf && command -v fd' \
-                      trobjo/zsh-wayland-utils││'printf $WAYLAND_DISPLAY'\
+                      trobjo/zsh-fzf-functions│if:'command -v fzf && command -v fd' \
+                      trobjo/zsh-wayland-utils│if:'[ $WAYLAND_DISPLAY ]'\
                       trobjo/zsh-autosuggestions-override\
                       zsh-users/zsh-syntax-highlighting\
-                      trobjo/Neovim-config│nvim│"plugindir=$XDG_CONFIG_HOME/nvim; command -v nvim"│ignore \
-                      trobjo/Sublime-Text-Config││"plugindir=$XDG_CONFIG_HOME/sublime-text/Packages/User; command -v subl"│ignore\
-                      trobjo/Sublime-Merge-Config││"plugindir=$XDG_CONFIG_HOME/sublime-merge/Packages/User; command -v smerge"│ignore)
+                      trobjo/Neovim-config│filename:nvim│env:'plugindir=$XDG_CONFIG_HOME/nvim'│if:'command -v nvim'│ignorelevel:ignore \
+                      trobjo/Sublime-Text-Config│env:'plugindir=$XDG_CONFIG_HOME/sublime-text/Packages/User'│if:'command -v subl'│ignorelevel:ignore\
+                      trobjo/Sublime-Merge-Config│env:'plugindir=$XDG_CONFIG_HOME/sublime-merge/Packages/User'│if:'command -v smerge'│ignorelevel:ignore)
 
 if [[ ! -d ${ZDOTDIR}/plugins ]]; then
     git clone https://github.com/trobjo/zsh-plugin-manager 2> /dev/null "${ZDOTDIR}/plugins/trobjo/zsh-plugin-manager"
@@ -323,7 +310,7 @@ if [[ ! -d ${ZDOTDIR}/plugins ]]; then
 fi
 
 source "${ZDOTDIR}/plugins/trobjo/zsh-plugin-manager/zsh-plugin-manager.zsh"
-plugin_manager load ${synchronous_plugins}
+plugin_manager install ${synchronous_plugins}
 
 autoload -Uz is-at-least
 if is-at-least 5.7; then
@@ -333,12 +320,13 @@ else
     source "${ZDOTDIR}/plugins/romkatv/zsh-defer/zsh-defer.plugin.zsh"
 fi
 
-zsh-defer -1 plugin_manager load ${asynchronous_plugins}
+zsh-defer -1 plugin_manager install ${asynchronous_plugins}
 
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=fg=5,underline
 ZSH_AUTOSUGGEST_IGNORE_WIDGETS[$ZSH_AUTOSUGGEST_IGNORE_WIDGETS[(i)yank]]=()
 ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(go_home bracketed-paste-url-magic url-quote-magic
                                 repeat-last-command-or-complete-entry expand-or-complete)
+
 
 # if [ -z "$TMUX" ] && [ ${UID} != 0 ] && [[ $SSH_TTY ]] && which tmux >/dev/null 2>&1
 # then
