@@ -1,5 +1,5 @@
 # Remove path duplicates
-typeset -U PATH path
+typeset -U PATH path fpath
 path=("$HOME/.local/bin" "$path[@]")
 export PATH
 
