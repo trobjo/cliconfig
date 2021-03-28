@@ -325,7 +325,7 @@ plug async trobjo/Neovim-config,\
            filename:nvim,\
            if:'command -v nvim',\
            where:'$XDG_CONFIG_HOME/nvim',\
-           postinstall_hook:'nvim +PlugInstall +qall',\
+           postinstall_hook:'nvim +PlugInstall +qall; printf "\e[6 q"',\
            ignorelevel:ignore
 plug async trobjo/Sublime-Text-Config,\
            where:'$XDG_CONFIG_HOME/sublime-text/Packages/User',\
