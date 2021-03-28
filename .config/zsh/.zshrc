@@ -303,9 +303,10 @@ plug 'zsh-users/zsh-autosuggestions',\
                     ZSH_AUTOSUGGEST_IGNORE_WIDGETS[$ZSH_AUTOSUGGEST_IGNORE_WIDGETS[(i)yank]]=()'
 
 plug async skywind3000/z.lua,\
-           env:'_ZL_CMD=h _ZL_DATA=${ZDOTDIR}/zlua_data',\
-           filename:z.lua,\
            if:'command -v lua',\
+           env:'_ZL_CMD=h',\
+           env:'_ZL_DATA=${ZDOTDIR}/zlua_data',\
+           filename:z.lua,\
            ignorelevel:nosource,\
            postinstall_hook:'mkdir -p "${HOME}/.local/bin" && curl --silent https://raw.githubusercontent.com/trobjo/czmod-compiled/master/czmod > "${HOME}/.local/bin/czmod" && chmod +x "${HOME}/.local/bin/czmod"',\
            postload_hook:'eval "$(lua ${__file_to_source} --init zsh enhanced once); _zlua_precmd() {(czmod --add "\${PWD:a}" &) }"'
@@ -335,11 +336,6 @@ plug async trobjo/Sublime-Merge-Config,\
            ignorelevel:ignore
 
 plug init
-
-
-
-# print ${#__asynchronous_plugins[(r)${(l.${#${(O@)__asynchronous_plugins//?/X}[1]}..?.)}]}
-# print ${__asynchronous_plugins[(r)${(l.${#${(O@)__asynchronous_plugins//?/X}[1]}..?.)}]}
 
 # if [ -z "$TMUX" ] && [ ${UID} != 0 ] && [[ $SSH_TTY ]] && which tmux >/dev/null 2>&1
 # then
