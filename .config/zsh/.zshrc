@@ -223,46 +223,46 @@ fi
 source "${ZDOTDIR}/plugins/trobjo/zsh-plugin-manager/zsh-plugin-manager.zsh"
 
 plug trobjo/zsh-prompt-compact
+plug trobjo/zsh-completions
+plug skywind3000/z.lua,\
+     if:'command -v lua',\
+     env:'_ZL_CMD=h',\
+     env:'_ZL_DATA=${ZDOTDIR}/zlua_data',\
+     filename:z.lua,\
+     ignorelevel:nosource,\
+     postinstall_hook:'mkdir -p "${HOME}/.local/bin" && curl --silent https://raw.githubusercontent.com/trobjo/czmod-compiled/master/czmod > "${HOME}/.local/bin/czmod" && chmod +x "${HOME}/.local/bin/czmod"',\
+     postload_hook:'eval "$(lua ${file_to_source} --init zsh enhanced once); _zlua_precmd() {(czmod --add "\${PWD:a}" &) }"'
+plug le0me55i/zsh-extract,\
+     filename:extract.plugin.zsh
+plug trobjo/zsh-goodies
+plug trobjo/zsh-wayland-utils,\
+     if:'printf $WAYLAND_DISPLAY'
+plug trobjo/zsh-file-opener
+plug wfxr/forgit
+plug trobjo/zsh-fzf-functions,\
+     if:'command -v fzf && command -v fd'
 plug 'zsh-users/zsh-autosuggestions',\
      env:'ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=fg=5,underline',\
      postload_hook:'ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(go_home bracketed-paste-url-magic url-quote-magic
                                 repeat-last-command-or-complete-entry expand-or-complete)\
                     ZSH_AUTOSUGGEST_IGNORE_WIDGETS[$ZSH_AUTOSUGGEST_IGNORE_WIDGETS[(i)yank]]=()'
-
-plug async skywind3000/z.lua,\
-           if:'command -v lua',\
-           env:'_ZL_CMD=h',\
-           env:'_ZL_DATA=${ZDOTDIR}/zlua_data',\
-           filename:z.lua,\
-           ignorelevel:nosource,\
-           postinstall_hook:'mkdir -p "${HOME}/.local/bin" && curl --silent https://raw.githubusercontent.com/trobjo/czmod-compiled/master/czmod > "${HOME}/.local/bin/czmod" && chmod +x "${HOME}/.local/bin/czmod"',\
-           postload_hook:'eval "$(lua ${__file_to_source} --init zsh enhanced once); _zlua_precmd() {(czmod --add "\${PWD:a}" &) }"'
-plug async le0me55i/zsh-extract,\
-           filename:extract.plugin.zsh
-plug async trobjo/zsh-goodies
-plug async trobjo/zsh-wayland-utils,\
-           if:'printf $WAYLAND_DISPLAY'
-plug async trobjo/zsh-file-opener
-plug async wfxr/forgit
-plug async trobjo/zsh-fzf-functions,\
-           if:'command -v fzf && command -v fd'
-plug async trobjo/zsh-autosuggestions-override,\
-           if:'printf $ZSH_AUTOSUGGEST_CLEAR_WIDGETS'
-plug async zsh-users/zsh-syntax-highlighting
-plug async trobjo/Neovim-config,\
-           filename:nvim,\
-           if:'command -v nvim',\
-           where:'$XDG_CONFIG_HOME/nvim',\
-           postinstall_hook:'nvim +PlugInstall +qall; printf "\e[6 q"',\
-           ignorelevel:ignore
-plug async trobjo/Sublime-Text-Config,\
-           where:'$XDG_CONFIG_HOME/sublime-text/Packages/User',\
-           if:'command -v subl',\
-           ignorelevel:ignore
-plug async trobjo/Sublime-Merge-Config,\
-           where:'$XDG_CONFIG_HOME/sublime-merge/Packages/User',\
-           if:'command -v smerge',\
-           ignorelevel:ignore
+plug trobjo/zsh-autosuggestions-override,\
+     if:'printf $ZSH_AUTOSUGGEST_CLEAR_WIDGETS'
+plug zsh-users/zsh-syntax-highlighting
+plug trobjo/Neovim-config,\
+     filename:nvim,\
+     if:'command -v nvim',\
+     where:'$XDG_CONFIG_HOME/nvim',\
+     postinstall_hook:'nvim +PlugInstall +qall; printf "\e[6 q"',\
+     ignorelevel:ignore
+plug trobjo/Sublime-Text-Config,\
+     where:'$XDG_CONFIG_HOME/sublime-text/Packages/User',\
+     if:'command -v subl',\
+     ignorelevel:ignore
+plug trobjo/Sublime-Merge-Config,\
+     where:'$XDG_CONFIG_HOME/sublime-merge/Packages/User',\
+     if:'command -v smerge',\
+     ignorelevel:ignore
 
 plug init
 
