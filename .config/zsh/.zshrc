@@ -295,13 +295,15 @@ fi
 
 source "${ZDOTDIR}/plugins/trobjo/zsh-plugin-manager/zsh-plugin-manager.zsh"
 
-# plug trobjo/zsh-prompt-compact
 plug trobjo/zsh-prompt-compact
-plug zsh-users/zsh-autosuggestions
+plug 'zsh-users/zsh-autosuggestions',\
+     env:'ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=fg=5,underline',\
+     postload_hook:'ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(go_home bracketed-paste-url-magic url-quote-magic
+                                repeat-last-command-or-complete-entry expand-or-complete)\
+                    ZSH_AUTOSUGGEST_IGNORE_WIDGETS[$ZSH_AUTOSUGGEST_IGNORE_WIDGETS[(i)yank]]=()'
 
 plug async skywind3000/z.lua,\
-           env:'_ZL_CMD=h',\
-           env:'_ZL_DATA=${ZDOTDIR}/zlua_data',\
+           env:'_ZL_CMD=h _ZL_DATA=${ZDOTDIR}/zlua_data',\
            filename:z.lua,\
            if:'command -v lua',\
            ignorelevel:nosource,\
@@ -310,15 +312,16 @@ plug async skywind3000/z.lua,\
 plug async le0me55i/zsh-extract,\
            filename:extract.plugin.zsh
 plug async trobjo/zsh-goodies
+plug async trobjo/zsh-wayland-utils,\
+           if:'printf $WAYLAND_DISPLAY'
 plug async trobjo/zsh-file-opener
 plug async trobjo/zsh-fzf-functions,\
            if:'command -v fzf && command -v fd'
-plug async trobjo/zsh-wayland-utils,\
-           if:'[ $WAYLAND_DISPLAY ]'
-plug async trobjo/zsh-autosuggestions-override
+plug async trobjo/zsh-autosuggestions-override,\
+           if:'printf $ZSH_AUTOSUGGEST_CLEAR_WIDGETS'
 plug async zsh-users/zsh-syntax-highlighting
 plug async trobjo/Neovim-config,\
-           filename:'nvim',\
+           filename:nvim,\
            if:'command -v nvim',\
            where:'$XDG_CONFIG_HOME/nvim',\
            ignorelevel:ignore
@@ -333,10 +336,6 @@ plug async trobjo/Sublime-Merge-Config,\
 
 plug init
 
-ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=fg=5,underline
-ZSH_AUTOSUGGEST_IGNORE_WIDGETS[$ZSH_AUTOSUGGEST_IGNORE_WIDGETS[(i)yank]]=()
-ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(go_home bracketed-paste-url-magic url-quote-magic
-                                repeat-last-command-or-complete-entry expand-or-complete)
 
 
 # print ${#__asynchronous_plugins[(r)${(l.${#${(O@)__asynchronous_plugins//?/X}[1]}..?.)}]}
