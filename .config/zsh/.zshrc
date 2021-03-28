@@ -316,6 +316,7 @@ plug async trobjo/zsh-goodies
 plug async trobjo/zsh-wayland-utils,\
            if:'printf $WAYLAND_DISPLAY'
 plug async trobjo/zsh-file-opener
+plug async wfxr/forgit
 plug async trobjo/zsh-fzf-functions,\
            if:'command -v fzf && command -v fd'
 plug async trobjo/zsh-autosuggestions-override,\
