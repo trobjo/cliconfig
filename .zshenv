@@ -27,8 +27,8 @@ export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
 
 export TEZOS_CLIENT_UNSAFE_DISABLE_DISCLAIMER=yes
 
-
-export ZDOTDIR=(${XDG_CONFIG_HOME:-$HOME/.config}/zsh)
+export XDG_CONFIG_HOME="$HOME/.config"
+export ZDOTDIR="${XDG_CONFIG_HOME:-$HOME/.config}/zsh"
 
 if [[ ! -d ${ZDOTDIR} ]]; then
     INSTALLCMD="rm -f $HOME/.zshenv $HOME/.gitignore &&\
