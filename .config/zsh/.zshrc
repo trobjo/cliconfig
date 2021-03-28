@@ -242,7 +242,7 @@ plug async skywind3000/z.lua,\
            postload_hook:'eval "$(lua ${file_to_source} --init zsh enhanced once); _zlua_precmd() {(czmod --add "\${PWD:a}" &) }"'
 plug async le0me55i/zsh-extract,\
            filename:extract.plugin.zsh
-# plug async trobjo/zsh-goodies, tejt:he
+plug async trobjo/zsh-goodies
 plug async trobjo/zsh-wayland-utils,\
            if:'printf $WAYLAND_DISPLAY'
 plug async trobjo/zsh-file-opener
