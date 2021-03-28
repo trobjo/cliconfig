@@ -287,22 +287,6 @@ alias -g onerr=" & 1> /dev/null"
 alias -g stdboth="2>&1"
 
 
-synchronous_plugins=(trobjo/zsh-plugin-manager│ignorelevel:nosource\
-                     romkatv/zsh-defer│ignorelevel:nosource\
-                     trobjo/zsh-prompt-compact\
-                     zsh-users/zsh-autosuggestions)
-
-asynchronous_plugins=(le0me55i/zsh-extract│filename:extract.plugin.zsh\
-                      skywind3000/z.lua│env:"_ZL_CMD=h"│env:"_ZL_DATA=${ZDOTDIR}/zlua_data"│filename:z.lua│if:'command -v lua'│ignorelevel:nosource│postinstall_hook:'mkdir -p "${HOME}/.local/bin" && curl --silent https://raw.githubusercontent.com/trobjo/czmod-compiled/master/czmod > "${HOME}/.local/bin/czmod" && chmod +x "${HOME}/.local/bin/czmod"'│postload_hook:'eval "$(lua ${pluginfile} --init zsh enhanced once); _zlua_precmd() {(czmod --add "\${PWD:a}" &) }"'\
-                      trobjo/zsh-goodies\
-                      trobjo/zsh-file-opener\
-                      trobjo/zsh-fzf-functions│if:'command -v fzf && command -v fd' \
-                      trobjo/zsh-wayland-utils│if:'[ $WAYLAND_DISPLAY ]'\
-                      trobjo/zsh-autosuggestions-override\
-                      zsh-users/zsh-syntax-highlighting\
-                      trobjo/Neovim-config│filename:nvim│env:'plugindir=$XDG_CONFIG_HOME/nvim'│if:'command -v nvim'│ignorelevel:ignore \
-                      trobjo/Sublime-Text-Config│env:'plugindir=$XDG_CONFIG_HOME/sublime-text/Packages/User'│if:'command -v subl'│ignorelevel:ignore\
-                      trobjo/Sublime-Merge-Config│env:'plugindir=$XDG_CONFIG_HOME/sublime-merge/Packages/User'│if:'command -v smerge'│ignorelevel:ignore)
 
 if [[ ! -d ${ZDOTDIR}/plugins ]]; then
     git clone https://github.com/trobjo/zsh-plugin-manager 2> /dev/null "${ZDOTDIR}/plugins/trobjo/zsh-plugin-manager"
@@ -310,23 +294,53 @@ if [[ ! -d ${ZDOTDIR}/plugins ]]; then
 fi
 
 source "${ZDOTDIR}/plugins/trobjo/zsh-plugin-manager/zsh-plugin-manager.zsh"
-plugin_manager install ${synchronous_plugins}
 
-autoload -Uz is-at-least
-if is-at-least 5.7; then
-    fpath+=("${ZDOTDIR}/plugins/romkatv/zsh-defer/")
-    autoload -Uz zsh-defer
-else
-    source "${ZDOTDIR}/plugins/romkatv/zsh-defer/zsh-defer.plugin.zsh"
-fi
+# plug trobjo/zsh-prompt-compact
+plug trobjo/zsh-prompt-compact
+plug zsh-users/zsh-autosuggestions
 
-zsh-defer -1 plugin_manager install ${asynchronous_plugins}
+plug async skywind3000/z.lua,\
+           env:'_ZL_CMD=h',\
+           env:'_ZL_DATA=${ZDOTDIR}/zlua_data',\
+           filename:z.lua,\
+           if:'command -v lua',\
+           ignorelevel:nosource,\
+           postinstall_hook:'mkdir -p "${HOME}/.local/bin" && curl --silent https://raw.githubusercontent.com/trobjo/czmod-compiled/master/czmod > "${HOME}/.local/bin/czmod" && chmod +x "${HOME}/.local/bin/czmod"',\
+           postload_hook:'eval "$(lua ${__file_to_source} --init zsh enhanced once); _zlua_precmd() {(czmod --add "\${PWD:a}" &) }"'
+plug async le0me55i/zsh-extract,\
+           filename:extract.plugin.zsh
+plug async trobjo/zsh-goodies
+plug async trobjo/zsh-file-opener
+plug async trobjo/zsh-fzf-functions,\
+           if:'command -v fzf && command -v fd'
+plug async trobjo/zsh-wayland-utils,\
+           if:'[ $WAYLAND_DISPLAY ]'
+plug async trobjo/zsh-autosuggestions-override
+plug async zsh-users/zsh-syntax-highlighting
+plug async trobjo/Neovim-config,\
+           filename:'nvim',\
+           if:'command -v nvim',\
+           where:'$XDG_CONFIG_HOME/nvim',\
+           ignorelevel:ignore
+plug async trobjo/Sublime-Text-Config,\
+           where:'$XDG_CONFIG_HOME/sublime-text/Packages/User',\
+           if:'command -v subl',\
+           ignorelevel:ignore
+plug async trobjo/Sublime-Merge-Config,\
+           where:'$XDG_CONFIG_HOME/sublime-merge/Packages/User',\
+           if:'command -v smerge',\
+           ignorelevel:ignore
+
+plug init
 
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=fg=5,underline
 ZSH_AUTOSUGGEST_IGNORE_WIDGETS[$ZSH_AUTOSUGGEST_IGNORE_WIDGETS[(i)yank]]=()
 ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(go_home bracketed-paste-url-magic url-quote-magic
                                 repeat-last-command-or-complete-entry expand-or-complete)
 
+
+# print ${#__asynchronous_plugins[(r)${(l.${#${(O@)__asynchronous_plugins//?/X}[1]}..?.)}]}
+# print ${__asynchronous_plugins[(r)${(l.${#${(O@)__asynchronous_plugins//?/X}[1]}..?.)}]}
 
 # if [ -z "$TMUX" ] && [ ${UID} != 0 ] && [[ $SSH_TTY ]] && which tmux >/dev/null 2>&1
 # then
