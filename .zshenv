@@ -24,7 +24,7 @@ export FZF_DEFAULT_OPTS="--ansi --bind \"alt-t:page-down,alt-c:page-up,ctrl-e:re
 
 export GREP_COLOR='1;38;5;20;48;5;16'
 
-export RIPGREP_CONFIG_PATH=/home/tb/.config/ripgreprc
+export RIPGREP_CONFIG_PATH="${HOME}/.config/ripgreprc"
 
 export ASPNETCORE_ENVIRONMENT=Development
 export Ulrik=Ulrik

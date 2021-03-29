@@ -272,7 +272,7 @@ plug async 'https://github.com/BurntSushi/ripgrep/releases/download/12.1.1/ripgr
 plug async 'https://github.com/sharkdp/fd/releases/download/v8.2.1/fd_8.2.1_amd64.deb',\
             if:'! command -v fd && command -v apt',\
             ignorelevel:ignore,\
-            postinstall_hook:'sudo dpkg -i \$filename && rm \$filename && sudo ln -s /usr/bin/fd-find /usr/bin/fd'
+            postinstall_hook:'sudo dpkg -i \$filename && rm \$filename'
 plug async trobjo/Sublime-Text-Config,\
            where:'$XDG_CONFIG_HOME/sublime-text/Packages/User',\
            if:'command -v subl',\
