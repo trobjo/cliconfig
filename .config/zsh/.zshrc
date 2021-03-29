@@ -242,7 +242,7 @@ plug async 'https://github.com/junegunn/fzf/releases/download/0.26.0/fzf-0.26.0-
             if:'! command -v fzf',\
             where:'$HOME/.local/bin/fzf',\
             ignorelevel:ignore,\
-            postinstall_hook:'tar zxvf \$filename --directory ${HOME}/.local/bin/'
+            postinstall_hook:'tar zxvf \$filename --directory ${HOME}/.local/bin/ && rm \$filename'
 plug async 'https://github.com/BurntSushi/ripgrep/releases/download/12.1.1/ripgrep_12.1.1_amd64.deb',\
             if:'! command -v rg && command -v apt',\
             where:'$HOME/.local/bin/rg',\
