@@ -229,7 +229,7 @@ plug trobjo/zsh-prompt-compact
 
 plug 'zsh-users/zsh-autosuggestions',\
      env:'ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=fg=5,underline',\
-     postload_hook:'ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(go_home bracketed-paste-url-magic url-quote-magic
+     postload_hook:'ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(go_to_old_pwd bracketed-paste-url-magic url-quote-magic
                                 repeat-last-command-or-complete-entry expand-or-complete)\
                     ZSH_AUTOSUGGEST_IGNORE_WIDGETS[$ZSH_AUTOSUGGEST_IGNORE_WIDGETS[(i)yank]]=()'
 plug trobjo/zsh-autosuggestions-override,\
