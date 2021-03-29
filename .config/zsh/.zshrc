@@ -120,7 +120,6 @@ then
     alias Qq='yay -Qq'
     alias Qtdq='yay -Rsn $(pacman -Qtdq)'
 else
-    alias -g fd='fdfind'
     alias -g Syu='sudo apt update && sudo apt upgrade'
     alias -g S='sudo apt install'
     alias U='dpkg -i'
