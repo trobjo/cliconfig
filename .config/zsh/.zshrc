@@ -220,9 +220,13 @@ if [[ ! -d ${ZDOTDIR}/plugins ]]; then
     command chmod g-rwX "${ZDOTDIR}/plugins"
 fi
 
-source "${ZDOTDIR}/plugins/trobjo/zsh-plugin-manager/zsh-plugin-manager.zsh"
+# source "${ZDOTDIR}/plugins/trobjo/zsh-plugin-manager/zsh-plugin-manager.zsh"
+source "/home/tb/Git/zsh-plugin-manager/zsh-plugin-manager.zsh"
 
+
+plug romkatv/gitstatus
 plug trobjo/zsh-prompt-compact
+
 plug 'zsh-users/zsh-autosuggestions',\
      env:'ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=fg=5,underline',\
      postload_hook:'ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(go_home bracketed-paste-url-magic url-quote-magic
@@ -236,10 +240,9 @@ plug async skywind3000/z.lua,\
            if:'command -v lua',\
            env:'_ZL_CMD=h',\
            env:'_ZL_DATA=${ZDOTDIR}/zlua_data',\
-           filename:z.lua,\
-           ignorelevel:nosource,\
+           ignorelevel:ignore,\
            postinstall_hook:'mkdir -p "${HOME}/.local/bin" && curl --silent https://raw.githubusercontent.com/trobjo/czmod-compiled/master/czmod > "${HOME}/.local/bin/czmod" && chmod +x "${HOME}/.local/bin/czmod"',\
-           postload_hook:'eval "$(lua ${file_to_source} --init zsh enhanced once); _zlua_precmd() {(czmod --add "\${PWD:a}" &) }"'
+           postload_hook:'eval "$(lua ${plugin_dir_local_location}/z.lua --init zsh enhanced once); _zlua_precmd() {(czmod --add "\${PWD:a}" &) }"'
 plug async le0me55i/zsh-extract,\
            filename:extract.plugin.zsh
 plug async trobjo/zsh-goodies
@@ -251,7 +254,6 @@ plug async trobjo/zsh-fzf-functions,\
            if:'command -v fzf && command -v fd'
 plug async zsh-users/zsh-syntax-highlighting
 plug async trobjo/Neovim-config,\
-           filename:nvim,\
            if:'command -v nvim',\
            where:'$XDG_CONFIG_HOME/nvim',\
            postinstall_hook:'nvim +PlugInstall +qall; printf "\e[6 q"',\
