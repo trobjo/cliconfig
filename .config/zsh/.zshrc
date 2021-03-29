@@ -162,7 +162,7 @@ alias rgg='rg --no-ignore-vcs --hidden'
 alias fdd='fd --no-ignore-vcs --hidden'
 alias has='transmission-remote -l'
 alias df='df -h'
-alias findip='curl -s icanhazip.com | tee >(wl-copy -n -- 2> /dev/null || exit 0)'
+alias findip='curl -s icanhazip.com | tee >(wl-copy -n -- 2> /dev/null)'
 
 
 # Git aliases
