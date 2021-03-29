@@ -250,27 +250,23 @@ plug async trobjo/zsh-goodies
 plug async trobjo/zsh-wayland-utils,\
            if:'printf $WAYLAND_DISPLAY'
 plug async trobjo/zsh-file-opener
-plug async wfxr/forgit
+plug async 'https://github.com/junegunn/fzf/releases/download/0.26.0/fzf-0.26.0-linux_amd64.tar.gz',\
+           if:'! command -v fzf',\
+           ignorelevel:ignore,\
+           postinstall_hook:'tar zxvf \$filename --directory ${HOME}/.local/bin/ && rm \$filename'
+plug async 'https://github.com/BurntSushi/ripgrep/releases/download/12.1.1/ripgrep_12.1.1_amd64.deb',\
+           if:'! command -v rg && command -v apt',\
+           ignorelevel:ignore,\
+           postinstall_hook:'sudo dpkg -i \$filename && rm \$filename'
+plug async 'https://github.com/sharkdp/fd/releases/download/v8.2.1/fd_8.2.1_amd64.deb',\
+           if:'! command -v fd && command -v apt',\
+           ignorelevel:ignore,\
+           postinstall_hook:'sudo dpkg -i \$filename && rm \$filename'
+plug async wfxr/forgit,\
+           if:'command -v fzf'
 plug async trobjo/zsh-fzf-functions,\
            if:'command -v fzf && command -v fd'
 plug async zsh-users/zsh-syntax-highlighting
-plug async trobjo/Neovim-config,\
-           if:'command -v nvim',\
-           where:'$XDG_CONFIG_HOME/nvim',\
-           postinstall_hook:'nvim +PlugInstall +qall; printf "\e[6 q"',\
-           ignorelevel:ignore
-plug async 'https://github.com/junegunn/fzf/releases/download/0.26.0/fzf-0.26.0-linux_amd64.tar.gz',\
-            if:'! command -v fzf',\
-            ignorelevel:ignore,\
-            postinstall_hook:'tar zxvf \$filename --directory ${HOME}/.local/bin/ && rm \$filename'
-plug async 'https://github.com/BurntSushi/ripgrep/releases/download/12.1.1/ripgrep_12.1.1_amd64.deb',\
-            if:'! command -v rg && command -v apt',\
-            ignorelevel:ignore,\
-            postinstall_hook:'sudo dpkg -i \$filename && rm \$filename'
-plug async 'https://github.com/sharkdp/fd/releases/download/v8.2.1/fd_8.2.1_amd64.deb',\
-            if:'! command -v fd && command -v apt',\
-            ignorelevel:ignore,\
-            postinstall_hook:'sudo dpkg -i \$filename && rm \$filename'
 plug async trobjo/Sublime-Text-Config,\
            where:'$XDG_CONFIG_HOME/sublime-text/Packages/User',\
            if:'command -v subl',\
@@ -278,6 +274,11 @@ plug async trobjo/Sublime-Text-Config,\
 plug async trobjo/Sublime-Merge-Config,\
            where:'$XDG_CONFIG_HOME/sublime-merge/Packages/User',\
            if:'command -v smerge',\
+           ignorelevel:ignore
+plug async trobjo/Neovim-config,\
+           if:'command -v nvim',\
+           where:'$XDG_CONFIG_HOME/nvim',\
+           postinstall_hook:'nvim +PlugInstall +qall; printf "\e[6 q"',\
            ignorelevel:ignore
 
 plug init
