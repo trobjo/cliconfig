@@ -261,7 +261,6 @@ plug async trobjo/Neovim-config,\
            ignorelevel:ignore
 plug async 'https://github.com/junegunn/fzf/releases/download/0.26.0/fzf-0.26.0-linux_amd64.tar.gz',\
             if:'! command -v fzf',\
-            where:'$HOME/.local/bin/fzf',\
             ignorelevel:ignore,\
             postinstall_hook:'tar zxvf \$filename --directory ${HOME}/.local/bin/ && rm \$filename'
 plug async 'https://github.com/BurntSushi/ripgrep/releases/download/12.1.1/ripgrep_12.1.1_amd64.deb',\
@@ -283,7 +282,6 @@ plug async trobjo/Sublime-Merge-Config,\
 
 plug init
 plug trobjo/zsh-plugin-manager
-
 
 # if [ -z "$TMUX" ] && [ ${UID} != 0 ] && [[ $SSH_TTY ]] && which tmux >/dev/null 2>&1
 # then
