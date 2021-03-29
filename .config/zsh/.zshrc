@@ -237,16 +237,6 @@ plug 'zsh-users/zsh-autosuggestions',\
 plug trobjo/zsh-autosuggestions-override,\
      if:'printf $ZSH_AUTOSUGGEST_CLEAR_WIDGETS'
 
-
-plug async 'https://github.com/junegunn/fzf/releases/download/0.26.0/fzf-0.26.0-linux_amd64.tar.gz',\
-            if:'! command -v fzf',\
-            where:'$HOME/.local/bin/fzf',\
-            ignorelevel:ignore,\
-            postinstall_hook:'tar zxvf \$filename --directory ${HOME}/.local/bin/ && rm \$filename'
-plug async 'https://github.com/BurntSushi/ripgrep/releases/download/12.1.1/ripgrep_12.1.1_amd64.deb',\
-            if:'! command -v rg && command -v apt',\
-            ignorelevel:ignore,\
-            postinstall_hook:'sudo dpkg -i \$filename && rm \$filename'
 plug async trobjo/zsh-completions
 plug async skywind3000/z.lua,\
            if:'command -v lua',\
@@ -270,6 +260,15 @@ plug async trobjo/Neovim-config,\
            where:'$XDG_CONFIG_HOME/nvim',\
            postinstall_hook:'nvim +PlugInstall +qall; printf "\e[6 q"',\
            ignorelevel:ignore
+plug async 'https://github.com/junegunn/fzf/releases/download/0.26.0/fzf-0.26.0-linux_amd64.tar.gz',\
+            if:'! command -v fzf',\
+            where:'$HOME/.local/bin/fzf',\
+            ignorelevel:ignore,\
+            postinstall_hook:'tar zxvf \$filename --directory ${HOME}/.local/bin/ && rm \$filename'
+plug async 'https://github.com/BurntSushi/ripgrep/releases/download/12.1.1/ripgrep_12.1.1_amd64.deb',\
+            if:'! command -v rg && command -v apt',\
+            ignorelevel:ignore,\
+            postinstall_hook:'sudo dpkg -i \$filename && rm \$filename'
 plug async trobjo/Sublime-Text-Config,\
            where:'$XDG_CONFIG_HOME/sublime-text/Packages/User',\
            if:'command -v subl',\
