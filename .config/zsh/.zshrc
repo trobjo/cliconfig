@@ -247,7 +247,7 @@ plug async 'https://github.com/BurntSushi/ripgrep/releases/download/12.1.1/ripgr
             if:'! command -v rg && command -v apt',\
             where:'$HOME/.local/bin/rg',\
             ignorelevel:ignore,\
-            postinstall_hook:'sudo dpkg -i \$filename && rm \filename'
+            postinstall_hook:'sudo dpkg -i \$filename && rm \$filename'
 plug async trobjo/zsh-completions
 plug async skywind3000/z.lua,\
            if:'command -v lua',\
