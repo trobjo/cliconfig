@@ -278,7 +278,7 @@ plug async trobjo/Sublime-Merge-Config,\
 plug async trobjo/Neovim-config,\
            if:'command -v nvim',\
            where:'$XDG_CONFIG_HOME/nvim',\
-           postinstall_hook:'nvim +PlugInstall +qall; printf "\e[6 q"',\
+           postinstall_hook:'nvim +PlugInstall +qall; printf "\e[6 q\n\n"',\
            ignorelevel:ignore
 
 plug init
