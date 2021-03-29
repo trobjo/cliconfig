@@ -210,7 +210,7 @@ alias -g json=' | jq -C "."'
 # I always forget how to redirect
 alias -g silent="> /dev/null 2>&1"
 alias -g noerr="2> /dev/null"
-alias -g onerr=" & 1> /dev/null"
+alias -g onerr="1> /dev/null"
 alias -g stdboth="2>&1"
 
 
@@ -221,8 +221,13 @@ if [[ ! -d ${ZDOTDIR}/plugins ]]; then
 fi
 source "${ZDOTDIR}/plugins/trobjo/zsh-plugin-manager/zsh-plugin-manager.zsh"
 
-plug romkatv/gitstatus
-plug trobjo/zsh-prompt-compact
+# plug romkatv/gitstatus
+# plug trobjo/zsh-prompt-compact
+
+plug 'sindresorhus/pure',\
+     env:'PURE_PROMPT_SYMBOL=%Bλ%b',\
+     source:'async.zsh',\
+     source:'pure.zsh'
 
 plug 'zsh-users/zsh-autosuggestions',\
      env:'ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=fg=5,underline',\
@@ -232,6 +237,17 @@ plug 'zsh-users/zsh-autosuggestions',\
 plug trobjo/zsh-autosuggestions-override,\
      if:'printf $ZSH_AUTOSUGGEST_CLEAR_WIDGETS'
 
+
+plug async 'https://github.com/junegunn/fzf/releases/download/0.26.0/fzf-0.26.0-linux_amd64.tar.gz',\
+            if:'! command -v fzf',\
+            where:'$HOME/.local/bin/fzf',\
+            ignorelevel:ignore,\
+            postinstall_hook:'tar zxvf \$filename --directory ${HOME}/.local/bin/'
+plug async 'https://github.com/BurntSushi/ripgrep/releases/download/12.1.1/ripgrep_12.1.1_amd64.deb',\
+            if:'! command -v rg && command -v apt',\
+            where:'$HOME/.local/bin/rg',\
+            ignorelevel:ignore,\
+            postinstall_hook:'sudo dpkg -i \$filename'
 plug async trobjo/zsh-completions
 plug async skywind3000/z.lua,\
            if:'command -v lua',\
@@ -241,7 +257,7 @@ plug async skywind3000/z.lua,\
            postinstall_hook:'mkdir -p "${HOME}/.local/bin" && curl --silent https://raw.githubusercontent.com/trobjo/czmod-compiled/master/czmod > "${HOME}/.local/bin/czmod" && chmod +x "${HOME}/.local/bin/czmod"',\
            postload_hook:'eval "$(lua ${plugin_dir_local_location}/z.lua --init zsh enhanced once); _zlua_precmd() {(czmod --add "\${PWD:a}" &) }"'
 plug async le0me55i/zsh-extract,\
-           filename:extract.plugin.zsh
+           source:extract.plugin.zsh
 plug async trobjo/zsh-goodies
 plug async trobjo/zsh-wayland-utils,\
            if:'printf $WAYLAND_DISPLAY'
@@ -265,6 +281,8 @@ plug async trobjo/Sublime-Merge-Config,\
            ignorelevel:ignore
 
 plug init
+plug trobjo/zsh-plugin-manager
+
 
 # if [ -z "$TMUX" ] && [ ${UID} != 0 ] && [[ $SSH_TTY ]] && which tmux >/dev/null 2>&1
 # then
