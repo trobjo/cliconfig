@@ -220,13 +220,14 @@ if [[ ! -d ${ZDOTDIR}/plugins ]]; then
 fi
 source "${ZDOTDIR}/plugins/trobjo/zsh-plugin-manager/zsh-plugin-manager.zsh"
 
-# plug romkatv/gitstatus
-# plug trobjo/zsh-prompt-compact
+plug romkatv/gitstatus
+plug trobjo/zsh-prompt-compact
 
-plug 'sindresorhus/pure',\
-     env:'PURE_PROMPT_SYMBOL=%Bλ%b',\
-     source:'async.zsh',\
-     source:'pure.zsh'
+# plug mafredri/zsh-async,\
+#      source:'async.zsh'
+# plug 'sindresorhus/pure',\
+#      env:'PURE_PROMPT_SYMBOL=%Bλ%b',\
+#      source:'pure.zsh'
 
 plug 'zsh-users/zsh-autosuggestions',\
      env:'ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=fg=5,underline',\
@@ -253,15 +254,15 @@ plug async trobjo/zsh-file-opener
 plug async 'https://github.com/junegunn/fzf/releases/download/0.26.0/fzf-0.26.0-linux_amd64.tar.gz',\
            if:'! command -v fzf',\
            ignorelevel:ignore,\
-           postinstall_hook:'tar zxvf \$filename --directory ${HOME}/.local/bin/ && rm \$filename'
+           postinstall_hook:'tar zxvf ${filename} --directory ${HOME}/.local/bin/ && rm ${filename}'
 plug async 'https://github.com/BurntSushi/ripgrep/releases/download/12.1.1/ripgrep_12.1.1_amd64.deb',\
            if:'! command -v rg && command -v apt',\
            ignorelevel:ignore,\
-           postinstall_hook:'sudo dpkg -i \$filename && rm \$filename'
+           postinstall_hook:'sudo dpkg -i ${filename} && rm ${filename}'
 plug async 'https://github.com/sharkdp/fd/releases/download/v8.2.1/fd_8.2.1_amd64.deb',\
            if:'! command -v fd && command -v apt',\
            ignorelevel:ignore,\
-           postinstall_hook:'sudo dpkg -i \$filename && rm \$filename'
+           postinstall_hook:'sudo dpkg -i ${filename} && rm ${filename}'
 plug async wfxr/forgit,\
            if:'command -v fzf'
 plug async trobjo/zsh-fzf-functions,\
