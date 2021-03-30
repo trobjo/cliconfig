@@ -43,5 +43,5 @@ if [[ ! -d ${ZDOTDIR} ]]; then
     /usr/bin/git --git-dir=$HOME/.cliconfig/ --work-tree=$HOME config --local core.worktree "$HOME" &&\
     /usr/bin/git --git-dir=$HOME/.cliconfig/ --work-tree=$HOME checkout &&\
     source $ZDOTDIR/.zshrc"
-    printf "run \x1B[34meval \$INSTALLCMD\033[0m to install the dotfiles\n\n"
+    printf "run \x1B[34\x1B[1meval \$INSTALLCMD\033[0m to install the dotfiles\n\n"
 fi
