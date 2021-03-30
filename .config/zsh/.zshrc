@@ -254,15 +254,15 @@ plug async trobjo/zsh-file-opener
 plug async 'https://github.com/junegunn/fzf/releases/download/0.26.0/fzf-0.26.0-linux_amd64.tar.gz',\
            if:'! command -v fzf',\
            ignorelevel:ignore,\
-           postinstall_hook:'tar zxvf ${filename_to_source} --directory ${HOME}/.local/bin/ && rm ${filename_to_source}'
+           install_hook:'tar zxvf ${filename} --directory ${HOME}/.local/bin/ && rm ${filename}'
 plug async 'https://github.com/BurntSushi/ripgrep/releases/download/12.1.1/ripgrep_12.1.1_amd64.deb',\
            if:'! command -v rg && command -v apt',\
            ignorelevel:ignore,\
-           postinstall_hook:'sudo dpkg -i ${filename_to_source} && rm ${filename_to_source}'
+           install_hook:'sudo dpkg -i ${filename} && rm ${filename}'
 plug async 'https://github.com/sharkdp/fd/releases/download/v8.2.1/fd_8.2.1_amd64.deb',\
            if:'! command -v fd && command -v apt',\
            ignorelevel:ignore,\
-           postinstall_hook:'sudo dpkg -i ${filename_to_source} && rm ${filename_to_source}'
+           install_hook:'sudo dpkg -i ${filename} && rm ${filename}'
 plug async wfxr/forgit,\
            if:'command -v fzf'
 plug async trobjo/zsh-fzf-functions,\
@@ -279,7 +279,7 @@ plug async trobjo/Sublime-Merge-Config,\
 plug async trobjo/Neovim-config,\
            if:'command -v nvim',\
            where:'$XDG_CONFIG_HOME/nvim',\
-           postinstall_hook:'nvim +PlugInstall +qall; printf "\e[6 q\n\n"',\
+           install_hook:'nvim +PlugInstall +qall; printf "\e[6 q\n\n"',\
            ignorelevel:ignore
 
 plug init
