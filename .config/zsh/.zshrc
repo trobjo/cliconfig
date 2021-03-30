@@ -219,8 +219,8 @@ if [[ ! -d ${ZDOTDIR}/plugins ]]; then
     git clone --depth=1 https://github.com/trobjo/zsh-plugin-manager 2> /dev/null "${ZDOTDIR}/plugins/trobjo/zsh-plugin-manager"
     command chmod g-rwX "${ZDOTDIR}/plugins"
 fi
-# source "${ZDOTDIR}/plugins/trobjo/zsh-plugin-manager/zsh-plugin-manager.zsh"
-source /home/tb/Git/zsh-plugin-manager/zsh-plugin-manager.zsh
+source "${ZDOTDIR}/plugins/trobjo/zsh-plugin-manager/zsh-plugin-manager.zsh"
+# source /home/tb/Git/zsh-plugin-manager/zsh-plugin-manager.zsh
 
 plug trobjo/zsh-completions
 plug romkatv/gitstatus
