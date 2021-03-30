@@ -161,7 +161,7 @@ alias rgg='rg --no-ignore-vcs --hidden'
 alias fdd='fd --no-ignore-vcs --hidden'
 alias has='transmission-remote -l'
 alias df='df -h'
-alias findip='curl -s icanhazip.com | tee >(wl-copy -n -- 2> /dev/null)'
+alias findip='curl -s icanhazip.com | tee >(wl-copy -n -- 2> /dev/null); return 0'
 alias ssh='TERM=xterm-256color /usr/bin/ssh'
 
 
