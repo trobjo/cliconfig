@@ -151,10 +151,10 @@ then
     alias ee='exa --group-directories-first --long --git'
     alias ea='exa --group-directories-first --long --git --all'
 else
-    alias ea='ls --color=auto --group-directories-first --all'
-    alias es='ls --color=auto -lt'
-    alias ee='ls --color=auto --group-directories-first -l'
     alias e='ls --color=auto --group-directories-first'
+    alias es='ls --color=auto -lt'
+    alias ee='ls --color=auto --no-group --group-directories-first -l --human-readable'
+    alias ea='ls --color=auto --group-directories-first --all --human-readable'
 fi
 
 alias rgg='rg --no-ignore-vcs --hidden'
@@ -214,23 +214,17 @@ alias -g stdboth="2>&1"
 
 
 
+
 if [[ ! -d ${ZDOTDIR}/plugins ]]; then
     git clone --depth=1 https://github.com/trobjo/zsh-plugin-manager 2> /dev/null "${ZDOTDIR}/plugins/trobjo/zsh-plugin-manager"
     command chmod g-rwX "${ZDOTDIR}/plugins"
 fi
-source "${ZDOTDIR}/plugins/trobjo/zsh-plugin-manager/zsh-plugin-manager.zsh"
+# source "${ZDOTDIR}/plugins/trobjo/zsh-plugin-manager/zsh-plugin-manager.zsh"
+source /home/tb/Git/zsh-plugin-manager/zsh-plugin-manager.zsh
 
+plug trobjo/zsh-completions
 plug romkatv/gitstatus
 plug trobjo/zsh-prompt-compact
-
-# plug mafredri/zsh-async,\
-#      source:'async.zsh'
-
-# plug 'sindresorhus/pure',\
-#      env:'PURE_PROMPT_SYMBOL=%Bλ%b',\
-#      source:'async.zsh',\
-#      source:'pure.zsh'
-
 plug 'zsh-users/zsh-autosuggestions',\
      env:'ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=fg=5,underline',\
      postload_hook:'ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(go_to_old_pwd bracketed-paste-url-magic url-quote-magic
@@ -239,7 +233,6 @@ plug 'zsh-users/zsh-autosuggestions',\
 plug trobjo/zsh-autosuggestions-override,\
      if:'printf $ZSH_AUTOSUGGEST_CLEAR_WIDGETS'
 
-plug async trobjo/zsh-completions
 plug async skywind3000/z.lua,\
            if:'command -v lua',\
            env:'_ZL_CMD=h',\
@@ -255,8 +248,9 @@ plug async trobjo/zsh-wayland-utils,\
 plug async trobjo/zsh-file-opener
 plug async 'https://github.com/junegunn/fzf/releases/download/0.26.0/fzf-0.26.0-linux_amd64.tar.gz',\
            if:'! command -v fzf',\
+           where:'${HOME}/.local/bin/fzf',\
            ignorelevel:ignore,\
-           install_hook:'tar zxvf ${filename} --directory ${HOME}/.local/bin/ && rm ${filename}'
+           install_hook:'tar zxvf ${filename} --directory ${where%/*} && rm ${filename}'
 plug async 'https://github.com/BurntSushi/ripgrep/releases/download/12.1.1/ripgrep_12.1.1_amd64.deb',\
            if:'! command -v rg && command -v apt',\
            ignorelevel:ignore,\

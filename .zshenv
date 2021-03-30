@@ -38,7 +38,7 @@ export ZDOTDIR="${XDG_CONFIG_HOME:-$HOME/.config}/zsh"
 
 if [[ ! -d ${ZDOTDIR} ]]; then
     INSTALLCMD="rm -f $HOME/.zshenv $HOME/.gitignore ${HOME}/.cliconfig &&\
-    git clone --bare https://github.com/trobjo/cliconfig $HOME/.cliconfig &&\
+    git clone --depth=1 --bare https://github.com/trobjo/cliconfig $HOME/.cliconfig &&\
     /usr/bin/git --git-dir=$HOME/.cliconfig/ --work-tree=$HOME config --local core.bare false &&\
     /usr/bin/git --git-dir=$HOME/.cliconfig/ --work-tree=$HOME config --local core.worktree "$HOME" &&\
     /usr/bin/git --git-dir=$HOME/.cliconfig/ --work-tree=$HOME checkout &&\
