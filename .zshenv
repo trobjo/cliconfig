@@ -37,11 +37,11 @@ export XDG_CONFIG_HOME="$HOME/.config"
 export ZDOTDIR="${XDG_CONFIG_HOME:-$HOME/.config}/zsh"
 
 if [[ ! -d ${ZDOTDIR} ]]; then
-    INSTALLCMD="rm -fr $HOME/.zshenv $HOME/.config/zsh $HOME/.gitignore ${HOME}/.cliconfig &&\
+    INSTALLCMD="rm -fr $HOME/.zshenv $HOME/.gitignore ${HOME}/.cliconfig &&\
     git clone --depth=1 --bare https://github.com/trobjo/cliconfig $HOME/.cliconfig &&\
     /usr/bin/git --git-dir=$HOME/.cliconfig/ --work-tree=$HOME config --local core.bare false &&\
     /usr/bin/git --git-dir=$HOME/.cliconfig/ --work-tree=$HOME config --local core.worktree "$HOME" &&\
     /usr/bin/git --git-dir=$HOME/.cliconfig/ --work-tree=$HOME checkout &&\
     source $ZDOTDIR/.zshrc"
-    printf "run \x1B[34\x1B[1meval \$INSTALLCMD\033[0m to install the dotfiles\n\n"
+    printf "run \x1B[1;34meval \$INSTALLCMD\033[0m to install the dotfiles\n\n"
 fi
