@@ -214,6 +214,15 @@ alias -g onerr="1> /dev/null"
 alias -g stdboth="2>&1"
 
 
+# Ensure precmds are run after cd
+redraw-prompt() {
+  local precmd
+  for precmd in $precmd_functions; do
+    $precmd
+done
+zle reset-prompt
+}
+zle -N redraw-prompt
 
 
 if [[ ! -d ${ZDOTDIR}/plugins ]]; then
