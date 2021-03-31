@@ -228,21 +228,22 @@ zle -N redraw-prompt
 if [[ ! -d ${ZDOTDIR}/plugins ]]; then
     git clone --depth=1 https://github.com/trobjo/zsh-plugin-manager 2> /dev/null "${ZDOTDIR}/plugins/trobjo/zsh-plugin-manager"
     command chmod g-rwX "${ZDOTDIR}/plugins"
+    mkdir -p "${HOME}/.local/bin"
 fi
 
 source "${ZDOTDIR}/plugins/trobjo/zsh-plugin-manager/zsh-plugin-manager.zsh"
 # source /home/tb/Git/zsh-plugin-manager/zsh-plugin-manager.zsh
 
-plug trobjo/zsh-completions
 
-# plug mafredri/zsh-async,\
-#      source:'async.zsh'
-# plug 'sindresorhus/pure',\
-#      env:'PURE_PROMPT_SYMBOL=%Bλ%b'
+plug mafredri/zsh-async,\
+     source:'async.zsh'
+plug 'sindresorhus/pure',\
+     env:'PURE_PROMPT_SYMBOL=%Bλ%b'
 
-plug romkatv/gitstatus
-plug trobjo/zsh-prompt-compact
+# plug romkatv/gitstatus
+# plug trobjo/zsh-prompt-compact
 
+plug async trobjo/zsh-completions
 plug async 'zsh-users/zsh-autosuggestions',\
             env:'ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=fg=5,underline',\
             postload:'ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(go_to_old_pwd bracketed-paste-url-magic url-quote-magic
@@ -255,8 +256,11 @@ plug async skywind3000/z.lua,\
            env:'_ZL_CMD=h',\
            env:'_ZL_DATA=${ZDOTDIR}/zlua_data',\
            ignorelevel:ignore,\
-           postinstall:'mkdir -p "${HOME}/.local/bin" && curl --silent https://raw.githubusercontent.com/trobjo/czmod-compiled/master/czmod > "${HOME}/.local/bin/czmod" && chmod +x "${HOME}/.local/bin/czmod"',\
            postload:'$(lua ${plugin_dir_local_location}/z.lua --init zsh enhanced once); _zlua_precmd() {(czmod --add "\${PWD:a}" &) }'
+plug async 'https://raw.githubusercontent.com/trobjo/czmod-compiled/master/czmod',\
+           if:'! command -v czmod',\
+           ignorelevel:ignore,\
+           postinstall:'chmod +x "${filename}" && mv ${filename} ${HOME}/.local/bin/'
 plug async le0me55i/zsh-extract,\
            source:extract.plugin.zsh
 plug async trobjo/zsh-goodies
@@ -265,9 +269,8 @@ plug async trobjo/zsh-wayland-utils,\
 plug async trobjo/zsh-file-opener
 plug async 'https://github.com/junegunn/fzf/releases/download/0.26.0/fzf-0.26.0-linux_amd64.tar.gz',\
            if:'! command -v fzf',\
-           where:'${HOME}/.local/bin/fzf',\
            ignorelevel:ignore,\
-           postinstall:'tar zxvf ${filename} --directory ${where%/*} && rm ${filename}'
+           postinstall:'tar zxvf ${filename} --directory ${HOME}/.local/bin/ && rm ${filename}'
 plug async 'https://github.com/BurntSushi/ripgrep/releases/download/12.1.1/ripgrep_12.1.1_amd64.deb',\
            if:'! command -v rg && command -v apt',\
            ignorelevel:ignore,\
