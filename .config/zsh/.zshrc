@@ -235,13 +235,13 @@ source "${ZDOTDIR}/plugins/trobjo/zsh-plugin-manager/zsh-plugin-manager.zsh"
 # source /home/tb/Git/zsh-plugin-manager/zsh-plugin-manager.zsh
 
 
-plug mafredri/zsh-async,\
-     source:'async.zsh'
-plug 'sindresorhus/pure',\
-     env:'PURE_PROMPT_SYMBOL=%Bλ%b'
+# plug mafredri/zsh-async,\
+#      source:'async.zsh'
+# plug 'sindresorhus/pure',\
+#      env:'PURE_PROMPT_SYMBOL=%Bλ%b'
 
-# plug romkatv/gitstatus
-# plug trobjo/zsh-prompt-compact
+plug romkatv/gitstatus
+plug trobjo/zsh-prompt-compact
 
 plug async trobjo/zsh-completions
 plug async 'zsh-users/zsh-autosuggestions',\
