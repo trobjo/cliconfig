@@ -229,39 +229,34 @@ if [[ ! -d ${ZDOTDIR}/plugins ]]; then
     git clone --depth=1 https://github.com/trobjo/zsh-plugin-manager 2> /dev/null "${ZDOTDIR}/plugins/trobjo/zsh-plugin-manager"
     command chmod g-rwX "${ZDOTDIR}/plugins"
 fi
+
 source "${ZDOTDIR}/plugins/trobjo/zsh-plugin-manager/zsh-plugin-manager.zsh"
 # source /home/tb/Git/zsh-plugin-manager/zsh-plugin-manager.zsh
 
 plug trobjo/zsh-completions
 
-
 # plug mafredri/zsh-async,\
 #      source:'async.zsh'
-
 # plug 'sindresorhus/pure',\
 #      env:'PURE_PROMPT_SYMBOL=%Bλ%b'
-
-     # source:'pure.zsh'
-     # source:'async.zsh',\
 
 plug romkatv/gitstatus
 plug trobjo/zsh-prompt-compact
 
 plug async 'zsh-users/zsh-autosuggestions',\
             env:'ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=fg=5,underline',\
-            postload_hook:'ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(go_to_old_pwd bracketed-paste-url-magic url-quote-magic
+            postload:'ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(go_to_old_pwd bracketed-paste-url-magic url-quote-magic
                     repeat-last-command-or-complete-entry expand-or-complete)\
                     ZSH_AUTOSUGGEST_IGNORE_WIDGETS[$ZSH_AUTOSUGGEST_IGNORE_WIDGETS[(i)yank]]=()'
 plug async trobjo/zsh-autosuggestions-override,\
            if:'printf $ZSH_AUTOSUGGEST_CLEAR_WIDGETS'
-
 plug async skywind3000/z.lua,\
            if:'command -v lua',\
            env:'_ZL_CMD=h',\
            env:'_ZL_DATA=${ZDOTDIR}/zlua_data',\
            ignorelevel:ignore,\
-           install_hook:'mkdir -p "${HOME}/.local/bin" && curl --silent https://raw.githubusercontent.com/trobjo/czmod-compiled/master/czmod > "${HOME}/.local/bin/czmod" && chmod +x "${HOME}/.local/bin/czmod"',\
-           postload_hook:'$(lua ${plugin_dir_local_location}/z.lua --init zsh enhanced once); _zlua_precmd() {(czmod --add "\${PWD:a}" &) }'
+           postinstall:'mkdir -p "${HOME}/.local/bin" && curl --silent https://raw.githubusercontent.com/trobjo/czmod-compiled/master/czmod > "${HOME}/.local/bin/czmod" && chmod +x "${HOME}/.local/bin/czmod"',\
+           postload:'$(lua ${plugin_dir_local_location}/z.lua --init zsh enhanced once); _zlua_precmd() {(czmod --add "\${PWD:a}" &) }'
 plug async le0me55i/zsh-extract,\
            source:extract.plugin.zsh
 plug async trobjo/zsh-goodies
@@ -272,15 +267,15 @@ plug async 'https://github.com/junegunn/fzf/releases/download/0.26.0/fzf-0.26.0-
            if:'! command -v fzf',\
            where:'${HOME}/.local/bin/fzf',\
            ignorelevel:ignore,\
-           install_hook:'tar zxvf ${filename} --directory ${where%/*} && rm ${filename}'
+           postinstall:'tar zxvf ${filename} --directory ${where%/*} && rm ${filename}'
 plug async 'https://github.com/BurntSushi/ripgrep/releases/download/12.1.1/ripgrep_12.1.1_amd64.deb',\
            if:'! command -v rg && command -v apt',\
            ignorelevel:ignore,\
-           install_hook:'sudo dpkg -i ${filename} && rm ${filename}'
+           postinstall:'sudo dpkg -i ${filename} && rm ${filename}'
 plug async 'https://github.com/sharkdp/fd/releases/download/v8.2.1/fd_8.2.1_amd64.deb',\
            if:'! command -v fd && command -v apt',\
            ignorelevel:ignore,\
-           install_hook:'sudo dpkg -i ${filename} && rm ${filename}'
+           postinstall:'sudo dpkg -i ${filename} && rm ${filename}'
 plug async wfxr/forgit,\
            if:'command -v fzf'
 plug async trobjo/zsh-fzf-functions,\
@@ -297,11 +292,10 @@ plug async trobjo/Sublime-Merge-Config,\
 plug async trobjo/Neovim-config,\
            if:'command -v nvim',\
            where:'$XDG_CONFIG_HOME/nvim',\
-           install_hook:'nvim +PlugInstall +qall; printf "\e[6 q\n\n"',\
+           postinstall:'nvim +PlugInstall +qall; printf "\e[6 q\n\n"',\
            ignorelevel:ignore
 
 plug init
-plug trobjo/zsh-plugin-manager
 
 # if [ -z "$TMUX" ] && [ ${UID} != 0 ] && [[ $SSH_TTY ]] && which tmux >/dev/null 2>&1
 # then
