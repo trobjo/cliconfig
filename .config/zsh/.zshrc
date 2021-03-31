@@ -233,15 +233,27 @@ source "${ZDOTDIR}/plugins/trobjo/zsh-plugin-manager/zsh-plugin-manager.zsh"
 # source /home/tb/Git/zsh-plugin-manager/zsh-plugin-manager.zsh
 
 plug trobjo/zsh-completions
+
+
+# plug mafredri/zsh-async,\
+#      source:'async.zsh'
+
+# plug 'sindresorhus/pure',\
+#      env:'PURE_PROMPT_SYMBOL=%Bλ%b'
+
+     # source:'pure.zsh'
+     # source:'async.zsh',\
+
 plug romkatv/gitstatus
 plug trobjo/zsh-prompt-compact
-plug 'zsh-users/zsh-autosuggestions',\
-     env:'ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=fg=5,underline',\
-     postload_hook:'ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(go_to_old_pwd bracketed-paste-url-magic url-quote-magic
+
+plug async 'zsh-users/zsh-autosuggestions',\
+            env:'ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=fg=5,underline',\
+            postload_hook:'ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(go_to_old_pwd bracketed-paste-url-magic url-quote-magic
                     repeat-last-command-or-complete-entry expand-or-complete)\
                     ZSH_AUTOSUGGEST_IGNORE_WIDGETS[$ZSH_AUTOSUGGEST_IGNORE_WIDGETS[(i)yank]]=()'
-plug trobjo/zsh-autosuggestions-override,\
-     if:'printf $ZSH_AUTOSUGGEST_CLEAR_WIDGETS'
+plug async trobjo/zsh-autosuggestions-override,\
+           if:'printf $ZSH_AUTOSUGGEST_CLEAR_WIDGETS'
 
 plug async skywind3000/z.lua,\
            if:'command -v lua',\
