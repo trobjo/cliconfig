@@ -163,6 +163,7 @@ alias has='transmission-remote -l'
 alias df='df -h'
 alias findip='curl -s icanhazip.com | tee >(wl-copy -n -- 2> /dev/null); return 0'
 alias ssh='TERM=xterm-256color /usr/bin/ssh'
+alias grep='grep --color=auto'
 
 
 # Git aliases
@@ -250,7 +251,7 @@ plug async 'zsh-users/zsh-autosuggestions',\
                     repeat-last-command-or-complete-entry expand-or-complete)\
                     ZSH_AUTOSUGGEST_IGNORE_WIDGETS[$ZSH_AUTOSUGGEST_IGNORE_WIDGETS[(i)yank]]=()'
 plug async trobjo/zsh-autosuggestions-override,\
-           if:'printf $ZSH_AUTOSUGGEST_CLEAR_WIDGETS'
+           if:'[[ -n $ZSH_AUTOSUGGEST_CLEAR_WIDGETS ]]'
 plug async skywind3000/z.lua,\
            if:'command -v lua',\
            env:'_ZL_CMD=h',\
@@ -258,14 +259,14 @@ plug async skywind3000/z.lua,\
            ignorelevel:ignore,\
            postload:'$(lua ${plugin_dir_local_location}/z.lua --init zsh enhanced once); _zlua_precmd() {(czmod --add "\${PWD:a}" &) }'
 plug async 'https://raw.githubusercontent.com/trobjo/czmod-compiled/master/czmod',\
-           if:'! command -v czmod',\
+           if:'! command -v czmod && command -v lua',\
            ignorelevel:ignore,\
            postinstall:'chmod +x "${filename}" && mv ${filename} ${HOME}/.local/bin/'
 plug async le0me55i/zsh-extract,\
            source:extract.plugin.zsh
 plug async trobjo/zsh-goodies
 plug async trobjo/zsh-wayland-utils,\
-           if:'printf $WAYLAND_DISPLAY'
+           if:'[[ -n $WAYLAND_DISPLAY ]]'
 plug async trobjo/zsh-file-opener
 plug async 'https://github.com/junegunn/fzf/releases/download/0.26.0/fzf-0.26.0-linux_amd64.tar.gz',\
            if:'! command -v fzf',\
