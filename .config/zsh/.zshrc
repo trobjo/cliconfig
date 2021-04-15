@@ -1,4 +1,3 @@
-
 # rehash path after pacman installation
 TRAPUSR1() { rehash }
 
@@ -235,16 +234,10 @@ fi
 source "${ZDOTDIR}/plugins/trobjo/zsh-plugin-manager/zsh-plugin-manager.zsh"
 # source /home/tb/Git/zsh-plugin-manager/zsh-plugin-manager.zsh
 
-
-# plug mafredri/zsh-async,\
-#      source:'async.zsh'
-# plug 'sindresorhus/pure',\
-#      env:'PURE_PROMPT_SYMBOL=%Bλ%b'
-
 plug romkatv/gitstatus
 plug trobjo/zsh-prompt-compact
+plug trobjo/zsh-completions
 
-plug async trobjo/zsh-completions
 plug async 'zsh-users/zsh-autosuggestions',\
             env:'ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=fg=5,underline',\
             postload:'ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(go_to_old_pwd bracketed-paste-url-magic url-quote-magic
@@ -256,29 +249,28 @@ plug async skywind3000/z.lua,\
            if:'command -v lua',\
            env:'_ZL_CMD=h',\
            env:'_ZL_DATA=${ZDOTDIR}/zlua_data',\
-           ignorelevel:ignore,\
-           postload:'$(lua ${plugin_dir_local_location}/z.lua --init zsh enhanced once); _zlua_precmd() {(czmod --add "\${PWD:a}" &) }'
+           ignore:true,\
+           postload:'$(lua ${plugindir}/z.lua --init zsh enhanced once); _zlua_precmd() {(czmod --add "\${PWD:a}" &) }'
 plug async 'https://raw.githubusercontent.com/trobjo/czmod-compiled/master/czmod',\
            if:'! command -v czmod && command -v lua',\
-           ignorelevel:ignore,\
+           ignore:true,\
            postinstall:'chmod +x "${filename}" && mv ${filename} ${HOME}/.local/bin/'
-plug async le0me55i/zsh-extract,\
-           source:extract.plugin.zsh
+plug async le0me55i/zsh-extract
 plug async trobjo/zsh-goodies
 plug async trobjo/zsh-wayland-utils,\
            if:'[[ -n $WAYLAND_DISPLAY ]]'
 plug async trobjo/zsh-file-opener
 plug async 'https://github.com/junegunn/fzf/releases/download/0.26.0/fzf-0.26.0-linux_amd64.tar.gz',\
            if:'! command -v fzf',\
-           ignorelevel:ignore,\
+           ignore:true,\
            postinstall:'tar zxvf ${filename} --directory ${HOME}/.local/bin/ && rm ${filename}'
 plug async 'https://github.com/BurntSushi/ripgrep/releases/download/12.1.1/ripgrep_12.1.1_amd64.deb',\
            if:'! command -v rg && command -v apt',\
-           ignorelevel:ignore,\
+           ignore:true,\
            postinstall:'sudo dpkg -i ${filename} && rm ${filename}'
 plug async 'https://github.com/sharkdp/fd/releases/download/v8.2.1/fd_8.2.1_amd64.deb',\
            if:'! command -v fd && command -v apt',\
-           ignorelevel:ignore,\
+           ignore:true,\
            postinstall:'sudo dpkg -i ${filename} && rm ${filename}'
 plug async wfxr/forgit,\
            if:'command -v fzf'
@@ -288,16 +280,16 @@ plug async zsh-users/zsh-syntax-highlighting
 plug async trobjo/Sublime-Text-Config,\
            where:'$XDG_CONFIG_HOME/sublime-text/Packages/User',\
            if:'command -v subl',\
-           ignorelevel:ignore
+           ignore:true
 plug async trobjo/Sublime-Merge-Config,\
            where:'$XDG_CONFIG_HOME/sublime-merge/Packages/User',\
            if:'command -v smerge',\
-           ignorelevel:ignore
+           ignore:true
 plug async trobjo/Neovim-config,\
            if:'command -v nvim',\
            where:'$XDG_CONFIG_HOME/nvim',\
            postinstall:'nvim +PlugInstall +qall; printf "\e[6 q\n\n"',\
-           ignorelevel:ignore
+           ignore:true
 
 plug init
 
