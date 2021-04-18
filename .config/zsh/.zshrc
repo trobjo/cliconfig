@@ -167,6 +167,7 @@ alias grep='grep --color=auto'
 
 # Git aliases
 alias g='git status --porcelain --short'
+alias gs='git status'
 alias gc='git clone'
 alias gco='git checkout'
 alias gcp='git cherry-pick'
@@ -224,7 +225,6 @@ zle reset-prompt
 }
 zle -N redraw-prompt
 
-
 if [[ ! -d ${ZDOTDIR}/plugins ]]; then
     git clone --depth=1 https://github.com/trobjo/zsh-plugin-manager 2> /dev/null "${ZDOTDIR}/plugins/trobjo/zsh-plugin-manager"
     command chmod g-rwX "${ZDOTDIR}/plugins"
@@ -232,45 +232,58 @@ if [[ ! -d ${ZDOTDIR}/plugins ]]; then
 fi
 
 source "${ZDOTDIR}/plugins/trobjo/zsh-plugin-manager/zsh-plugin-manager.zsh"
-# source /home/tb/Git/zsh-plugin-manager/zsh-plugin-manager.zsh
+# source $HOME/Git/zsh-plugin-manager/zsh-plugin-manager.zsh
 
-plug romkatv/gitstatus
-plug trobjo/zsh-prompt-compact
+# plug romkatv/gitstatus
+# plug trobjo/zsh-prompt-compact
+
+
+
+
+plug mafredri/zsh-async
+
+plug 'sindresorhus/pure',\
+     env:'PURE_PROMPT_SYMBOL=%Bλ%b'
+
+
+
 plug trobjo/zsh-completions
 
 plug async 'zsh-users/zsh-autosuggestions',\
             env:'ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=fg=5,underline',\
             postload:'ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(go_to_old_pwd bracketed-paste-url-magic url-quote-magic
-                    repeat-last-command-or-complete-entry expand-or-complete)\
-                    ZSH_AUTOSUGGEST_IGNORE_WIDGETS[$ZSH_AUTOSUGGEST_IGNORE_WIDGETS[(i)yank]]=()'
+                    repeat-last-command-or-complete-entry expand-or-complete)',\
+            postload:'ZSH_AUTOSUGGEST_IGNORE_WIDGETS[$ZSH_AUTOSUGGEST_IGNORE_WIDGETS[(i)yank]]=()'
 plug async trobjo/zsh-autosuggestions-override,\
            if:'[[ -n $ZSH_AUTOSUGGEST_CLEAR_WIDGETS ]]'
 plug async skywind3000/z.lua,\
            if:'command -v lua',\
            env:'_ZL_CMD=h',\
            env:'_ZL_DATA=${ZDOTDIR}/zlua_data',\
-           ignore:true,\
-           postload:'$(lua ${plugindir}/z.lua --init zsh enhanced once); _zlua_precmd() {(czmod --add "\${PWD:a}" &) }'
+           nosource:true,\
+           postload:'_zlua_precmd() {(czmod --add "\${PWD:a}" &) }',\
+           postload:'$(lua ${plugindir}/z.lua --init zsh enhanced once)'
 plug async 'https://raw.githubusercontent.com/trobjo/czmod-compiled/master/czmod',\
            if:'! command -v czmod && command -v lua',\
-           ignore:true,\
+           nosource:true,\
            postinstall:'chmod +x "${filename}" && mv ${filename} ${HOME}/.local/bin/'
 plug async le0me55i/zsh-extract
+plug async trobjo/zsh-multimedia
 plug async trobjo/zsh-goodies
 plug async trobjo/zsh-wayland-utils,\
            if:'[[ -n $WAYLAND_DISPLAY ]]'
 plug async trobjo/zsh-file-opener
 plug async 'https://github.com/junegunn/fzf/releases/download/0.26.0/fzf-0.26.0-linux_amd64.tar.gz',\
            if:'! command -v fzf',\
-           ignore:true,\
+           nosource:true,\
            postinstall:'tar zxvf ${filename} --directory ${HOME}/.local/bin/ && rm ${filename}'
 plug async 'https://github.com/BurntSushi/ripgrep/releases/download/12.1.1/ripgrep_12.1.1_amd64.deb',\
            if:'! command -v rg && command -v apt',\
-           ignore:true,\
+           nosource:true,\
            postinstall:'sudo dpkg -i ${filename} && rm ${filename}'
 plug async 'https://github.com/sharkdp/fd/releases/download/v8.2.1/fd_8.2.1_amd64.deb',\
            if:'! command -v fd && command -v apt',\
-           ignore:true,\
+           nosource:true,\
            postinstall:'sudo dpkg -i ${filename} && rm ${filename}'
 plug async wfxr/forgit,\
            if:'command -v fzf'
@@ -280,16 +293,19 @@ plug async zsh-users/zsh-syntax-highlighting
 plug async trobjo/Sublime-Text-Config,\
            where:'$XDG_CONFIG_HOME/sublime-text/Packages/User',\
            if:'command -v subl',\
-           ignore:true
+           nosource:true
+plug async trobjo/ZshGotoSublimeCurrentDir,\
+           where:'$XDG_CONFIG_HOME/sublime-text/Packages/ZshGotoSublimeCurrentDir',\
+           if:'command -v subl'
 plug async trobjo/Sublime-Merge-Config,\
            where:'$XDG_CONFIG_HOME/sublime-merge/Packages/User',\
            if:'command -v smerge',\
-           ignore:true
+           nosource:true
 plug async trobjo/Neovim-config,\
            if:'command -v nvim',\
            where:'$XDG_CONFIG_HOME/nvim',\
            postinstall:'nvim +PlugInstall +qall; printf "\e[6 q\n\n"',\
-           ignore:true
+           nosource:true
 
 plug init
 

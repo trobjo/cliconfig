@@ -1,6 +1,6 @@
 # Remove path duplicates
 typeset -U PATH path fpath
-path=("$HOME/.local/bin" "$path[@]")
+path=("$HOME/.local/bin" "$HOME/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin" "$HOME/.npm/bin" "$path[@]")
 export PATH
 
 if [[ $SSH_TTY ]]; then
@@ -26,11 +26,16 @@ export GREP_COLOR='1;38;5;20;48;5;16'
 export RIPGREP_CONFIG_PATH="${HOME}/.config/ripgreprc"
 
 export ASPNETCORE_ENVIRONMENT=Development
-export Ulrik=Ulrik
 export DOTNET_CLI_TELEMETRY_OPTOUT=1
 export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
 
-export TEZOS_CLIENT_UNSAFE_DISABLE_DISCLAIMER=yes
+export MSBUILD_EXE_PATH="$HOME/.omnisharp-recent/omnisharp/.msbuild/Current/Bin/MSBuild.exe"
+#MONO_CFG_DIR=$HOME/.omnisharp-recent/etc
+#MONO_ENV_OPTIONS=--assembly-loader=strict --config $HOME/.omnisharp-recent/etc/config
+#MSBuildSDKsPath=/usr/share/dotnet/sdk/5.0.200/
+#MSBuildSDKsPath=/usr/local/share/dotnet/sdk/2.2.207
+
+
 
 export XDG_CONFIG_HOME="$HOME/.config"
 export ZDOTDIR="${XDG_CONFIG_HOME:-$HOME/.config}/zsh"
