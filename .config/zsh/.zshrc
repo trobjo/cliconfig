@@ -103,21 +103,21 @@ stty -ixon quit undef           # For Vim etc; above is just for zsh.
 
 if command -v pacman &> /dev/null
 then
-    alias Syu='yay -Syu --devel'
+    alias Syu='doas pacman -Syu'
     alias mus='ncmpcpp -q'
-    alias S='yay -Sy'
-    alias U='yay -U'
-    alias Sy='yay -Sy'
+    alias S='doas pacman -S'
+    alias U='doas pacman -U'
+    alias Sy='doas pacman -Sy'
     alias Ss='yay -Ss'
-    alias Rsn='yay -Rsn'
-    alias Rns='yay -Rns'
-    alias Rdd='yay -Rdd'
-    alias Qs='yay -Qs'
+    alias Rsn='doas pacman -Rsn'
+    alias Rns='doas pacman -Rsn'
+    alias Rdd='doas pacman -Rdd'
+    alias Qs='pacman -Qs'
     # list packages owned by
     alias Qo='pacman -Qo'
-    alias Qqs='yay -Qqs'
-    alias Qq='yay -Qq'
-    alias Qtdq='yay -Rsn $(pacman -Qtdq)'
+    alias Qqs='pacman -Qqs'
+    alias Qq='pacman -Qq'
+    alias Qtdq='doas pacman -Rsn $(pacman -Qtdq)'
 else
     alias -g Syu='sudo apt update && sudo apt upgrade'
     alias -g S='sudo apt install'
@@ -151,7 +151,7 @@ then
     alias ea='exa --group-directories-first --long --git --all'
 else
     alias e='ls --color=auto --group-directories-first'
-    alias es='ls --color=auto -lt'
+    alias es='ls --color=auto -lt --human-readable'
     alias ee='ls --color=auto --no-group --group-directories-first -l --human-readable'
     alias ea='ls --color=auto --group-directories-first --all --human-readable'
 fi
