@@ -23,8 +23,11 @@ export FZF_DEFAULT_COMMAND="/usr/bin/fd --color always --exclude Pictures --excl
 export FZF_DEFAULT_OPTS="--ansi --bind \"alt-t:page-down,alt-c:page-up,ctrl-e:replace-query,ctrl-b:toggle-all,change:top,alt-w:execute-silent(wl-copy -- {+})+abort,ctrl-/:execute-silent(rm -rf {+})+abort,ctrl-r:toggle-sort,ctrl-q:beginning-of-line+kill-line\" --multi --inline-info --reverse --color=bg+:-1,info:-1,prompt:-1,pointer:4:regular,hl:4,hl+:6,fg+:12,border:19,marker:2:regular --prompt='  '   --marker=❯ --pointer=❯ --margin 0,0 --multi --preview-window=right:50%:sharp:wrap --preview 'if [[ {} =~ \"\.(jpeg|JPEG|jpg|JPG|png|webp|WEBP|PNG|gif|GIF|bmp|BMP|tif|TIF|tiff|TIFF)$\" ]]; then identify -ping -format \"%f\\n%m\\n%w x %h pixels\\n%b\\n\\n%l\\n%c\\n\" {} ; elif [[ {} =~ \"\.(svg|SVG)$\" ]]; then tiv -h \$FZF_PREVIEW_LINES -w \$FZF_PREVIEW_COLUMNS {}; elif [[ {} =~ \"\.(pdf|PDF)$\" ]]; then pdfinfo {}; elif [[ {} =~ \"\.(zip|ZIP|sublime-package)$\" ]]; then zip -sf {};  else bat --style=header,numbers --terminal-width=\$FZF_PREVIEW_COLUMNS --force-colorization --italic-text=always --line-range :70 {} 2>/dev/null || exa -T -L 2 --color=always --long {}; fi'"
 
 export GREP_COLOR='1;38;5;20;48;5;16'
-
 export RIPGREP_CONFIG_PATH="${HOME}/.config/ripgreprc"
+
+# should yield ≈ 256 bits of entropy
+export PASSWORD_STORE_GENERATED_LENGTH=39
+export PASSWORD_STORE_X_SELECTION=primary
 
 export ASPNETCORE_ENVIRONMENT=Development
 export DOTNET_CLI_TELEMETRY_OPTOUT=1
