@@ -215,47 +215,42 @@ alias -g onerr="1> /dev/null"
 alias -g stdboth="2>&1"
 
 
-# Ensure precmds are run after cd
-redraw-prompt() {
-  local precmd
-  for precmd in $precmd_functions; do
-    $precmd
-done
-zle reset-prompt
+
+mkdir () {
+  command mkdir -p "$1"
+  cd "$1"
 }
-zle -N redraw-prompt
+alias mkcd='mkdir'
 
 if [[ ! -d ${ZDOTDIR}/plugins ]]; then
     git clone --depth=1 https://github.com/trobjo/zsh-plugin-manager 2> /dev/null "${ZDOTDIR}/plugins/trobjo/zsh-plugin-manager"
     command chmod g-rwX "${ZDOTDIR}/plugins"
-    mkdir -p "${HOME}/.local/bin"
+    [ ! -d "${HOME}/.local/bin" ] && mkdir -p "${HOME}/.local/bin"
 fi
 
 source "${ZDOTDIR}/plugins/trobjo/zsh-plugin-manager/zsh-plugin-manager.zsh"
 # source $HOME/Git/zsh-plugin-manager/zsh-plugin-manager.zsh
 
-# plug romkatv/gitstatus
-# plug trobjo/zsh-prompt-compact
-
-
-
-
-plug mafredri/zsh-async
-
-plug 'sindresorhus/pure',\
-     env:'PURE_PROMPT_SYMBOL=%Bλ%b'
-
-
-
+plug romkatv/gitstatus
+plug trobjo/zsh-prompt-compact
+    # where:'/home/user/Git/zsh-prompt-compact'
 plug trobjo/zsh-completions
 
+# ZSH_AUTOSUGGEST_IGNORE_WIDGETS[$ZSH_AUTOSUGGEST_IGNORE_WIDGETS[(i)yank]]=()
+plug async zsh-users/zsh-syntax-highlighting
 plug async 'zsh-users/zsh-autosuggestions',\
-            env:'ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=fg=5,underline',\
-            postload:'ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(go_to_old_pwd bracketed-paste-url-magic url-quote-magic
-                    repeat-last-command-or-complete-entry expand-or-complete)',\
-            postload:'ZSH_AUTOSUGGEST_IGNORE_WIDGETS[$ZSH_AUTOSUGGEST_IGNORE_WIDGETS[(i)yank]]=()'
+            postload:'ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=fg=5,underline',\
+            postload:'ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(go_home bracketed-paste-url-magic url-quote-magic
+                    repeat-last-command-or-complete-entry expand-or-complete)'
+plug async trobjo/ZshGotoSublimeCurrentDir,\
+           where:'$XDG_CONFIG_HOME/sublime-text/Packages/ZshGotoSublimeCurrentDir',\
+           if:'command -v subl'
 plug async trobjo/zsh-autosuggestions-override,\
            if:'[[ -n $ZSH_AUTOSUGGEST_CLEAR_WIDGETS ]]'
+plug async trobjo/zsh-goodies
+plug async trobjo/zsh-wayland-utils,\
+           if:'[[ -n $WAYLAND_DISPLAY ]]'
+plug async trobjo/zsh-file-opener
 plug async skywind3000/z.lua,\
            if:'command -v lua',\
            env:'_ZL_CMD=h',\
@@ -269,10 +264,6 @@ plug async 'https://raw.githubusercontent.com/trobjo/czmod-compiled/master/czmod
            postinstall:'chmod +x "${filename}" && mv ${filename} ${HOME}/.local/bin/'
 plug async le0me55i/zsh-extract
 plug async trobjo/zsh-multimedia
-plug async trobjo/zsh-goodies
-plug async trobjo/zsh-wayland-utils,\
-           if:'[[ -n $WAYLAND_DISPLAY ]]'
-plug async trobjo/zsh-file-opener
 plug async 'https://github.com/junegunn/fzf/releases/download/0.26.0/fzf-0.26.0-linux_amd64.tar.gz',\
            if:'! command -v fzf',\
            nosource:true,\
@@ -289,14 +280,10 @@ plug async wfxr/forgit,\
            if:'command -v fzf'
 plug async trobjo/zsh-fzf-functions,\
            if:'command -v fzf && command -v fd'
-plug async zsh-users/zsh-syntax-highlighting
 plug async trobjo/Sublime-Text-Config,\
            where:'$XDG_CONFIG_HOME/sublime-text/Packages/User',\
            if:'command -v subl',\
            nosource:true
-plug async trobjo/ZshGotoSublimeCurrentDir,\
-           where:'$XDG_CONFIG_HOME/sublime-text/Packages/ZshGotoSublimeCurrentDir',\
-           if:'command -v subl'
 plug async trobjo/Sublime-Merge-Config,\
            where:'$XDG_CONFIG_HOME/sublime-merge/Packages/User',\
            if:'command -v smerge',\
@@ -309,7 +296,4 @@ plug async trobjo/Neovim-config,\
 
 plug init
 
-# if [ -z "$TMUX" ] && [ ${UID} != 0 ] && [[ $SSH_TTY ]] && which tmux >/dev/null 2>&1
-# then
-#     tmux new-session -A -s main
-# fi
+[ -f ${ZDOTDIR}/novcs.zsh ] && source ${ZDOTDIR}/novcs.zsh
