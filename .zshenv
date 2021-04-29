@@ -9,8 +9,9 @@ fi
 
 export LESS_TERMCAP_md=$'\E[1;34m'   # Begins bold.
 export LESS_TERMCAP_me=$'\E[0m'      # Ends mode.
-export LESS="-F -g -i -M -R -w -z-4 -X"
+export LESS="-F -g -i -M -R -w -z-4"
 export PAGER=less
+export SYSTEMD_LESS="FRSMK"
 
 export BAT_THEME=base16
 # see https://the.exa.website/docs/colour-themes
