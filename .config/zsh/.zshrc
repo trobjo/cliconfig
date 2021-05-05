@@ -66,7 +66,6 @@ setopt hist_expire_dups_first   # Expire A Duplicate Event First When Trimming H
 setopt hist_ignore_dups         # Do Not Record An Event That Was Just Recorded Again.
 setopt hist_ignore_all_dups     # Delete An Old Recorded Event If A New Event Is A Duplicate.
 setopt hist_find_no_dups        # Do Not Display A Previously Found Event.
-setopt hist_ignore_space        # Do Not Record An Event Starting With A Space.
 setopt extended_history         # Show Timestamp In History.
 
 # - - - - - - - - - - - - - - - - - - - -
@@ -192,6 +191,8 @@ alias gluf='git ls-files --others --exclude-standard'
 alias ggn='git grep -n'
 alias gf='git fetch'
 
+alias commit='swaymsg [app_id="^PopUp$"] move scratchpad > /dev/null 2>&1; git commit -v'
+
 # stdout in sublime or less, or clipboard
 alias -g CC=' |& tee /dev/tty |& wl-copy -n'
 if [[ $SSH_TTY ]]; then
@@ -216,27 +217,20 @@ alias -g stdboth="2>&1"
 
 
 
-mkdir () {
+mkcd() {
   command mkdir -p "$1"
   cd "$1"
 }
-alias mkcd='mkdir'
 
 if [[ ! -d ${ZDOTDIR}/plugins ]]; then
     git clone --depth=1 https://github.com/trobjo/zsh-plugin-manager 2> /dev/null "${ZDOTDIR}/plugins/trobjo/zsh-plugin-manager"
     command chmod g-rwX "${ZDOTDIR}/plugins"
     [ ! -d "${HOME}/.local/bin" ] && mkdir -p "${HOME}/.local/bin"
 fi
-
 source "${ZDOTDIR}/plugins/trobjo/zsh-plugin-manager/zsh-plugin-manager.zsh"
-# source $HOME/Git/zsh-plugin-manager/zsh-plugin-manager.zsh
-
 plug romkatv/gitstatus
 plug trobjo/zsh-prompt-compact
-    # where:'/home/user/Git/zsh-prompt-compact'
 plug trobjo/zsh-completions
-
-# ZSH_AUTOSUGGEST_IGNORE_WIDGETS[$ZSH_AUTOSUGGEST_IGNORE_WIDGETS[(i)yank]]=()
 plug async zsh-users/zsh-syntax-highlighting
 plug async 'zsh-users/zsh-autosuggestions',\
             postload:'ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=fg=5,underline',\
@@ -246,6 +240,7 @@ plug async trobjo/ZshGotoSublimeCurrentDir,\
            where:'$XDG_CONFIG_HOME/sublime-text/Packages/ZshGotoSublimeCurrentDir',\
            if:'command -v subl'
 plug async trobjo/zsh-autosuggestions-override,\
+           where:'/home/user/Git/zsh-autosuggestions-override',\
            if:'[[ -n $ZSH_AUTOSUGGEST_CLEAR_WIDGETS ]]'
 plug async trobjo/zsh-goodies
 plug async trobjo/zsh-wayland-utils,\
@@ -263,7 +258,6 @@ plug async 'https://raw.githubusercontent.com/trobjo/czmod-compiled/master/czmod
            nosource:true,\
            postinstall:'chmod +x "${filename}" && mv ${filename} ${HOME}/.local/bin/'
 plug async le0me55i/zsh-extract
-plug async trobjo/zsh-multimedia
 plug async 'https://github.com/junegunn/fzf/releases/download/0.26.0/fzf-0.26.0-linux_amd64.tar.gz',\
            if:'! command -v fzf',\
            nosource:true,\
@@ -296,4 +290,4 @@ plug async trobjo/Neovim-config,\
 
 plug init
 
-[ -f ${ZDOTDIR}/novcs.zsh ] && source ${ZDOTDIR}/novcs.zsh
+[ -f ${ZDOTDIR}/novcs.zsh ] && compile_or_recompile ${ZDOTDIR}/novcs.zsh && source ${ZDOTDIR}/novcs.zsh
