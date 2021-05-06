@@ -240,7 +240,6 @@ plug async trobjo/ZshGotoSublimeCurrentDir,\
            where:'$XDG_CONFIG_HOME/sublime-text/Packages/ZshGotoSublimeCurrentDir',\
            if:'command -v subl'
 plug async trobjo/zsh-autosuggestions-override,\
-           where:'/home/user/Git/zsh-autosuggestions-override',\
            if:'[[ -n $ZSH_AUTOSUGGEST_CLEAR_WIDGETS ]]'
 plug async trobjo/zsh-goodies
 plug async trobjo/zsh-wayland-utils,\
