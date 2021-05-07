@@ -1,14 +1,16 @@
 # Remove path duplicates
-typeset -U fpath
+typeset -U PATH path fpath
+path=("$HOME/.local/bin" "$path[@]")
+export PATH
 
 if [[ $SSH_TTY ]]; then
     export TERM=xterm-256color
 fi
 
-export LESS_TERMCAP_md=$'\E[1;34m'    # Begins bold.
-export LESS_TERMCAP_me=$'\E[0m'       # Ends bold.
-export LESS_TERMCAP_us=$'\E[3;4;38m'  # Begins italic, underline
-export LESS_TERMCAP_ue=$'\E[0m'       # Ends italic, underline.
+export LESS_TERMCAP_md=$'\E[1;34m'    # Begins bold, blue.
+export LESS_TERMCAP_me=$'\E[0m'       # Ends bold, blue.
+export LESS_TERMCAP_us=$'\E[1;36m'  # Begins bold, cyan
+export LESS_TERMCAP_ue=$'\E[0m'       # Ends bold, cyan
 
 #-F quit if one screen, -i ignore case, -R raw, -w highlight unread part of page after scroll
 # -z-10 scroll 10 lines less than page height, --incsearch incremental search, +Gg show percentage
