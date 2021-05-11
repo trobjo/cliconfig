@@ -280,6 +280,8 @@ plug async wfxr/forgit,\
            if:'command -v fzf'
 plug async trobjo/zsh-fzf-functions,\
            if:'command -v fzf && command -v fd'
+plug async trobjo/zsh-prompt-compact
+
 plug async trobjo/Sublime-Text-Config,\
            where:'$XDG_CONFIG_HOME/sublime-text/Packages/User',\
            if:'command -v subl',\
@@ -293,7 +295,6 @@ plug async trobjo/Neovim-config,\
            where:'$XDG_CONFIG_HOME/nvim',\
            postinstall:'nvim +PlugInstall +qall; printf "\e[6 q\n\n"',\
            nosource:true
-plug async trobjo/zsh-prompt-compact
 
 plug init
 
