@@ -1,6 +1,7 @@
 # Otherwise we cannot load the prompt properly
 setopt no_prompt_bang prompt_percent prompt_subst
 PROMPT='%% '
+print -Pn -- '\e]2;%(8~|…/%6~|%~)\a'
 
 # rehash path after pacman installation
 TRAPUSR1() { rehash }
@@ -82,7 +83,7 @@ zle_highlight=(region:bg=17 special:bg=17
 setopt no_case_glob             # Make globbing case insensitive.
 setopt extendedglob             # Use Extended Globbing.
 setopt autocd                   # Automatically Change Directory If A Directory Is Entered.
-LISTMAX=9999                    # Disable 'do you wish to see all %d possibilities'
+LISTMAX=999                     # Disable 'do you wish to see all %d possibilities'
 
 
 # Completion Options.
@@ -234,7 +235,8 @@ if [[ ! -d ${ZDOTDIR}/plugins ]]; then
     command chmod g-rwX "${ZDOTDIR}/plugins"
     [ ! -d "${HOME}/.local/bin" ] && mkdir -p "${HOME}/.local/bin"
 fi
-source "${ZDOTDIR}/plugins/trobjo/zsh-plugin-manager/zsh-plugin-manager.zsh"
+# source "${ZDOTDIR}/plugins/trobjo/zsh-plugin-manager/zsh-plugin-manager.zsh"
+source "/home/user/Git/zsh-plugin-manager/zsh-plugin-manager.zsh"
 
 plug trobjo/zsh-completions
 plug async romkatv/gitstatus
@@ -254,8 +256,8 @@ plug async trobjo/zsh-wayland-utils,\
 plug async trobjo/zsh-file-opener
 plug async skywind3000/z.lua,\
            if:'command -v lua',\
-           env:'_ZL_CMD=h',\
-           env:'_ZL_DATA=${ZDOTDIR}/zlua_data',\
+           preload:'export _ZL_CMD=h',\
+           preload:'export _ZL_DATA=${ZDOTDIR}/zlua_data',\
            nosource:true,\
            postload:'_zlua_precmd() {(czmod --add "\${PWD:a}" &) }',\
            postload:'$(lua ${plugindir}/z.lua --init zsh enhanced once)'
@@ -280,8 +282,10 @@ plug async wfxr/forgit,\
            if:'command -v fzf'
 plug async trobjo/zsh-fzf-functions,\
            if:'command -v fzf && command -v fd'
-plug async trobjo/zsh-prompt-compact
-
+plug async trobjo/zsh-prompt-compact,\
+           where:'/home/user/Git/zsh-prompt-compact',\
+           preload:'[ $PopUp ] && PROHIBIT_TERM_TITLE=true',\
+           preload:'READ_ONLY_ICON=""'
 plug async trobjo/Sublime-Text-Config,\
            where:'$XDG_CONFIG_HOME/sublime-text/Packages/User',\
            if:'command -v subl',\
