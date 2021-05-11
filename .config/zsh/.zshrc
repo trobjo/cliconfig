@@ -235,8 +235,7 @@ if [[ ! -d ${ZDOTDIR}/plugins ]]; then
     command chmod g-rwX "${ZDOTDIR}/plugins"
     [ ! -d "${HOME}/.local/bin" ] && mkdir -p "${HOME}/.local/bin"
 fi
-# source "${ZDOTDIR}/plugins/trobjo/zsh-plugin-manager/zsh-plugin-manager.zsh"
-source "/home/user/Git/zsh-plugin-manager/zsh-plugin-manager.zsh"
+source "${ZDOTDIR}/plugins/trobjo/zsh-plugin-manager/zsh-plugin-manager.zsh"
 
 plug trobjo/zsh-completions
 plug async romkatv/gitstatus
@@ -283,7 +282,6 @@ plug async wfxr/forgit,\
 plug async trobjo/zsh-fzf-functions,\
            if:'command -v fzf && command -v fd'
 plug async trobjo/zsh-prompt-compact,\
-           where:'/home/user/Git/zsh-prompt-compact',\
            preload:'[ $PopUp ] && PROHIBIT_TERM_TITLE=true',\
            preload:'READ_ONLY_ICON=""'
 plug async trobjo/Sublime-Text-Config,\
