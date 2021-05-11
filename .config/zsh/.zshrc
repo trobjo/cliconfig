@@ -96,9 +96,17 @@ setopt no_bg_nice               # Don't frob with nicelevels
 setopt no_flow_control          # Disable ^S, ^Q, ^\ #
 stty -ixon quit undef           # For Vim etc; above is just for zsh.
 
+# Otherwise we cannot load the prompt properly
+setopt no_prompt_bang prompt_percent prompt_subst
+PROMPT='%% '
+
+
 #
 ## ALIASES
 #
+
+alias -g ...='$(subl --command doas_edit; cat /tmp/doasedit)'
+
 
 if command -v pacman &> /dev/null
 then
@@ -228,9 +236,9 @@ if [[ ! -d ${ZDOTDIR}/plugins ]]; then
     [ ! -d "${HOME}/.local/bin" ] && mkdir -p "${HOME}/.local/bin"
 fi
 source "${ZDOTDIR}/plugins/trobjo/zsh-plugin-manager/zsh-plugin-manager.zsh"
-plug romkatv/gitstatus
-plug trobjo/zsh-prompt-compact
+
 plug trobjo/zsh-completions
+plug async romkatv/gitstatus
 plug async zsh-users/zsh-syntax-highlighting
 plug async 'zsh-users/zsh-autosuggestions',\
             postload:'ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=fg=5,underline',\
@@ -286,6 +294,7 @@ plug async trobjo/Neovim-config,\
            where:'$XDG_CONFIG_HOME/nvim',\
            postinstall:'nvim +PlugInstall +qall; printf "\e[6 q\n\n"',\
            nosource:true
+plug async trobjo/zsh-prompt-compact
 
 plug init
 

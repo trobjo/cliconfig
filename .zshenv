@@ -14,7 +14,7 @@ export LESS_TERMCAP_ue=$'\E[0m'       # Ends bold, cyan
 
 #-F quit if one screen, -i ignore case, -R raw, -w highlight unread part of page after scroll
 # -z-10 scroll 10 lines less than page height, --incsearch incremental search, +Gg show percentage
-export LESS="--quit-if-one-screen --ignore-case --hilite-unread -z-10 --tilde --incsearch +Gg"
+export LESS="--raw-control-chars --quit-if-one-screen --ignore-case --hilite-unread -z-10 --tilde --incsearch +Gg"
 export PAGER=less
 export SYSTEMD_LESS="FRSMK"
 
