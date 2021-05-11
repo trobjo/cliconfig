@@ -1,3 +1,7 @@
+# Otherwise we cannot load the prompt properly
+setopt no_prompt_bang prompt_percent prompt_subst
+PROMPT='%% '
+
 # rehash path after pacman installation
 TRAPUSR1() { rehash }
 
@@ -95,11 +99,6 @@ setopt no_beep                  # Don't beep
 setopt no_bg_nice               # Don't frob with nicelevels
 setopt no_flow_control          # Disable ^S, ^Q, ^\ #
 stty -ixon quit undef           # For Vim etc; above is just for zsh.
-
-# Otherwise we cannot load the prompt properly
-setopt no_prompt_bang prompt_percent prompt_subst
-PROMPT='%% '
-
 
 #
 ## ALIASES
