@@ -199,7 +199,9 @@ alias gluf='git ls-files --others --exclude-standard'
 alias ggn='git grep -n'
 alias gf='git fetch'
 
-alias commit='swaymsg [app_id="^PopUp$"] move scratchpad > /dev/null 2>&1; git commit -v'
+alias commit='swaymsg [app_id="^PopUp$"] move scratchpad\; [app_id="^subl$"] focus > /dev/null 2>&1; git commit -v'
+alias push='git push'
+alias pull='git pull'
 
 # stdout in sublime or less, or clipboard
 alias -g CC=' |& tee /dev/tty |& wl-copy -n'
@@ -284,14 +286,14 @@ plug async trobjo/zsh-fzf-functions,\
 plug async trobjo/zsh-prompt-compact,\
            preload:'[ $PopUp ] && PROHIBIT_TERM_TITLE=true',\
            preload:'READ_ONLY_ICON=""'
-plug async trobjo/Sublime-Text-Config,\
-           where:'$XDG_CONFIG_HOME/sublime-text/Packages/User',\
-           if:'command -v subl',\
-           nosource:true
-plug async trobjo/Sublime-Merge-Config,\
-           where:'$XDG_CONFIG_HOME/sublime-merge/Packages/User',\
-           if:'command -v smerge',\
-           nosource:true
+# plug async trobjo/Sublime-Text-Config,\
+#            where:'$XDG_CONFIG_HOME/sublime-text/Packages/User',\
+#            if:'command -v subl',\
+#            nosource:true
+# plug async trobjo/Sublime-Merge-Config,\
+#            where:'$XDG_CONFIG_HOME/sublime-merge/Packages/User',\
+#            if:'command -v smerge',\
+#            nosource:true
 plug async trobjo/Neovim-config,\
            if:'command -v nvim',\
            where:'$XDG_CONFIG_HOME/nvim',\
