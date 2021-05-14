@@ -222,11 +222,6 @@ alias -g stdboth="2>&1"
 
 
 
-mkcd() {
-  command mkdir -p "$1"
-  cd "$1"
-}
-
 if [[ ! -d ${ZDOTDIR}/plugins ]]; then
     git clone --depth=1 https://github.com/trobjo/zsh-plugin-manager 2> /dev/null "${ZDOTDIR}/plugins/trobjo/zsh-plugin-manager"
     command chmod g-rwX "${ZDOTDIR}/plugins"
