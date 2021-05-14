@@ -233,7 +233,6 @@ if [[ ! -d ${ZDOTDIR}/plugins ]]; then
     [ ! -d "${HOME}/.local/bin" ] && mkdir -p "${HOME}/.local/bin"
 fi
 source "${ZDOTDIR}/plugins/trobjo/zsh-plugin-manager/zsh-plugin-manager.zsh"
-# source /home/user/Git/zsh-plugin-manager/zsh-plugin-manager.zsh
 
 plug trobjo/zsh-completions
 
