@@ -1,8 +1,3 @@
-# Otherwise we cannot load the prompt properly
-setopt no_prompt_bang prompt_percent prompt_subst
-PROMPT='%% '
-print -Pn -- '\e]2;%(8~|…/%6~|%~)\a'
-
 # rehash path after pacman installation
 TRAPUSR1() { rehash }
 
@@ -238,67 +233,82 @@ if [[ ! -d ${ZDOTDIR}/plugins ]]; then
     [ ! -d "${HOME}/.local/bin" ] && mkdir -p "${HOME}/.local/bin"
 fi
 source "${ZDOTDIR}/plugins/trobjo/zsh-plugin-manager/zsh-plugin-manager.zsh"
+# source /home/user/Git/zsh-plugin-manager/zsh-plugin-manager.zsh
 
 plug trobjo/zsh-completions
-plug async romkatv/gitstatus
-plug async zsh-users/zsh-syntax-highlighting
-plug async 'zsh-users/zsh-autosuggestions',\
-            postload:'ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=fg=5,underline',\
-            postload:'ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(go_home bracketed-paste-url-magic url-quote-magic
-                    repeat-last-command-or-complete-entry expand-or-complete)'
-plug async trobjo/ZshGotoSublimeCurrentDir,\
-           where:'$XDG_CONFIG_HOME/sublime-text/Packages/ZshGotoSublimeCurrentDir',\
-           if:'command -v subl'
-plug async trobjo/zsh-autosuggestions-override,\
-           if:'[[ -n $ZSH_AUTOSUGGEST_CLEAR_WIDGETS ]]'
-plug async trobjo/zsh-goodies
-plug async trobjo/zsh-wayland-utils,\
-           if:'[[ -n $WAYLAND_DISPLAY ]]'
-plug async trobjo/zsh-file-opener
-plug async skywind3000/z.lua,\
-           if:'command -v lua',\
-           preload:'export _ZL_CMD=h',\
-           preload:'export _ZL_DATA=${ZDOTDIR}/zlua_data',\
-           nosource:true,\
-           postload:'_zlua_precmd() {(czmod --add "\${PWD:a}" &) }',\
-           postload:'$(lua ${plugindir}/z.lua --init zsh enhanced once)'
-plug async 'https://raw.githubusercontent.com/trobjo/czmod-compiled/master/czmod',\
-           if:'! command -v czmod && command -v lua',\
-           nosource:true,\
-           postinstall:'chmod +x "${filename}" && mv ${filename} ${HOME}/.local/bin/'
-plug async le0me55i/zsh-extract
-plug async 'https://github.com/junegunn/fzf/releases/download/0.26.0/fzf-0.26.0-linux_amd64.tar.gz',\
-           if:'! command -v fzf',\
-           nosource:true,\
-           postinstall:'tar zxvf ${filename} --directory ${HOME}/.local/bin/ && rm ${filename}'
-plug async 'https://github.com/BurntSushi/ripgrep/releases/download/12.1.1/ripgrep_12.1.1_amd64.deb',\
-           if:'! command -v rg && command -v apt',\
-           nosource:true,\
-           postinstall:'sudo dpkg -i ${filename} && rm ${filename}'
-plug async 'https://github.com/sharkdp/fd/releases/download/v8.2.1/fd_8.2.1_amd64.deb',\
-           if:'! command -v fd && command -v apt',\
-           nosource:true,\
-           postinstall:'sudo dpkg -i ${filename} && rm ${filename}'
-plug async wfxr/forgit,\
-           if:'command -v fzf'
-plug async trobjo/zsh-fzf-functions,\
-           if:'command -v fzf && command -v fd'
-plug async trobjo/zsh-prompt-compact,\
-           preload:'[ $PopUp ] && PROHIBIT_TERM_TITLE=true',\
-           preload:'READ_ONLY_ICON=""'
-# plug async trobjo/Sublime-Text-Config,\
-#            where:'$XDG_CONFIG_HOME/sublime-text/Packages/User',\
-#            if:'command -v subl',\
-#            nosource:true
-# plug async trobjo/Sublime-Merge-Config,\
-#            where:'$XDG_CONFIG_HOME/sublime-merge/Packages/User',\
-#            if:'command -v smerge',\
-#            nosource:true
-plug async trobjo/Neovim-config,\
-           if:'command -v nvim',\
-           where:'$XDG_CONFIG_HOME/nvim',\
-           postinstall:'nvim +PlugInstall +qall; printf "\e[6 q\n\n"',\
-           nosource:true
+
+plug zsh-users/zsh-syntax-highlighting,\
+     defer:'-m'
+plug 'zsh-users/zsh-autosuggestions',\
+     defer:'-m',\
+     postload:'ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=fg=5,underline',\
+     postload:'ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(go_home bracketed-paste-url-magic url-quote-magic
+              repeat-last-command-or-complete-entry expand-or-complete)'
+plug trobjo/zsh-autosuggestions-override,\
+     defer:'-m',\
+     if:'[[ -n $ZSH_AUTOSUGGEST_CLEAR_WIDGETS ]]'
+plug trobjo/ZshGotoSublimeCurrentDir,\
+     where:'$XDG_CONFIG_HOME/sublime-text/Packages/ZshGotoSublimeCurrentDir',\
+     defer:'-m',\
+     if:'command -v subl'
+plug trobjo/zsh-goodies,\
+     defer:'-m'
+plug trobjo/zsh-wayland-utils,\
+     defer:'-m',\
+     if:'[[ -n $WAYLAND_DISPLAY ]]'
+plug trobjo/zsh-file-opener,\
+     defer:'-m'
+plug skywind3000/z.lua,\
+     if:'command -v lua',\
+     preload:'export _ZL_CMD=h',\
+     preload:'export _ZL_DATA=${ZDOTDIR}/zlua_data',\
+     ignore,\
+     postload:'_zlua_precmd() {(czmod --add "\${PWD:a}" &) }',\
+     postload:'$(lua ${plugindir}/z.lua --init zsh enhanced once)'
+plug 'https://raw.githubusercontent.com/trobjo/czmod-compiled/master/czmod',\
+     if:'! command -v czmod && command -v lua',\
+     ignore,\
+     postinstall:'chmod +x "${filename}" && mv ${filename} ${HOME}/.local/bin/'
+plug le0me55i/zsh-extract,\
+     defer:'-m'
+plug 'https://github.com/junegunn/fzf/releases/download/0.26.0/fzf-0.26.0-linux_amd64.tar.gz',\
+     if:'! command -v fzf',\
+     ignore,\
+     postinstall:'tar zxvf ${filename} --directory ${HOME}/.local/bin/ && rm ${filename}'
+plug 'https://github.com/BurntSushi/ripgrep/releases/download/12.1.1/ripgrep_12.1.1_amd64.deb',\
+     if:'! command -v rg && command -v apt',\
+     ignore,\
+     postinstall:'sudo dpkg -i ${filename} && rm ${filename}'
+plug 'https://github.com/sharkdp/fd/releases/download/v8.2.1/fd_8.2.1_amd64.deb',\
+     if:'! command -v fd && command -v apt',\
+     ignore,\
+     postinstall:'sudo dpkg -i ${filename} && rm ${filename}'
+plug wfxr/forgit,\
+     defer:'-m',\
+     if:'command -v fzf'
+plug trobjo/zsh-fzf-functions,\
+     defer:'-m',\
+     if:'command -v fzf && command -v fd'
+plug romkatv/gitstatus, defer:'-m'
+plug trobjo/zsh-prompt-compact,\
+     defer:'-1',\
+     preload:'setopt no_prompt_bang prompt_percent prompt_subst',\
+     preload:'PROMPT=""',\
+     preload:'[ $PopUp ] && PROHIBIT_TERM_TITLE=true',\
+     preload:'READ_ONLY_ICON=""'
+# plug trobjo/Sublime-Text-Config,\
+#      where:'$XDG_CONFIG_HOME/sublime-text/Packages/User',\
+#      if:'command -v subl',\
+#      ignore
+# plug trobjo/Sublime-Merge-Config,\
+#      where:'$XDG_CONFIG_HOME/sublime-merge/Packages/User',\
+#      if:'command -v smerge',\
+#      ignore
+plug trobjo/Neovim-config,\
+     if:'command -v nvim',\
+     where:'$XDG_CONFIG_HOME/nvim',\
+     postinstall:'nvim +PlugInstall +qall; printf "\e[6 q\n\n"',\
+     ignore
 
 plug init
 
