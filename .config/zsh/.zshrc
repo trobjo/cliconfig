@@ -258,7 +258,7 @@ plug 'zsh-users/zsh-autosuggestions',\
               repeat-last-command-or-complete-entry expand-or-complete)'
 plug trobjo/zsh-autosuggestions-override,\
      defer:'-m',\
-     if:'[[ -n $ZSH_AUTOSUGGEST_CLEAR_WIDGETS ]]'
+     if:'[[ $ZSH_AUTOSUGGEST_CLEAR_WIDGETS ]]'
 plug trobjo/ZshGotoSublimeCurrentDir,\
      where:'$XDG_CONFIG_HOME/sublime-text/Packages/ZshGotoSublimeCurrentDir',\
      defer:'-m',\
@@ -267,8 +267,9 @@ plug trobjo/zsh-goodies,\
      defer:'-m'
 plug trobjo/zsh-wayland-utils,\
      defer:'-m',\
-     if:'[[ -n $WAYLAND_DISPLAY ]]'
+     if:'[[ $WAYLAND_DISPLAY ]]'
 plug trobjo/zsh-file-opener,\
+     if:'[[ $SSH_TTY ]] || command -v sway',\
      defer:'-m'
 plug skywind3000/z.lua,\
      if:'command -v lua',\
