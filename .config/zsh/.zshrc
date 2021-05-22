@@ -168,9 +168,7 @@ alias grep='grep --color=auto'
 
 
 # Git aliases
-alias g='git status --porcelain --short'
-alias gs='git status'
-alias gc='git clone'
+alias gs='git status --porcelain --short'
 alias gco='git checkout'
 alias gcp='git cherry-pick'
 alias gb='git branch'
@@ -221,6 +219,24 @@ alias -g onerr="1> /dev/null"
 alias -g stdboth="2>&1"
 
 
+gc() {
+     [ ! -d "${HOME}/gi" ] && mkdir -p "${HOME}/gi"
+     if [[ "$PWD" == "$HOME" ]]; then
+          cd "${HOME}/gi"
+     fi
+
+     if [[ "${#@}" -lt 1 ]]; then
+          repo="$(wl-paste -n)"
+     else
+          repo="$1"
+     fi
+
+     git clone "${repo}" &&\
+     cd "${${${repo/%\//}##*/}//.git/}"
+     # the expr is read inside out. First, if the last char is '/' ('%' means last) we replace it with ''.
+     # then we remove everything before the last '/' (string has now mutated), and finally, if the string
+     # ends with .git, we remove that
+}
 
 if [[ ! -d ${ZDOTDIR}/plugins ]]; then
     git clone --depth=1 https://github.com/trobjo/zsh-plugin-manager 2> /dev/null "${ZDOTDIR}/plugins/trobjo/zsh-plugin-manager"
@@ -229,8 +245,10 @@ if [[ ! -d ${ZDOTDIR}/plugins ]]; then
 fi
 source "${ZDOTDIR}/plugins/trobjo/zsh-plugin-manager/zsh-plugin-manager.zsh"
 
-plug trobjo/zsh-completions
+cdpath=("${XDG_CONFIG_HOME}/zsh" "${HOME}/gi" "${HOME}")
 
+plug trobjo/zsh-completions
+plug romkatv/gitstatus, defer:'-m'
 plug zsh-users/zsh-syntax-highlighting,\
      defer:'-m'
 plug 'zsh-users/zsh-autosuggestions',\
@@ -283,7 +301,8 @@ plug wfxr/forgit,\
 plug trobjo/zsh-fzf-functions,\
      defer:'-m',\
      if:'command -v fzf && command -v fd'
-plug romkatv/gitstatus, defer:'-m'
+plug trobjo/zsh-multimedia,\
+     defer:'-m'
 plug trobjo/zsh-prompt-compact,\
      defer:'-1',\
      preload:'setopt no_prompt_bang prompt_percent prompt_subst',\
@@ -306,4 +325,7 @@ plug trobjo/Neovim-config,\
 
 plug init
 
-[ -f ${ZDOTDIR}/novcs.zsh ] && compile_or_recompile ${ZDOTDIR}/novcs.zsh && source ${ZDOTDIR}/novcs.zsh
+if [[ -f ${ZDOTDIR}/novcs.zsh ]]; then
+     # compile_or_recompile ${ZDOTDIR}/novcs.zsh
+     source ${ZDOTDIR}/novcs.zsh
+fi

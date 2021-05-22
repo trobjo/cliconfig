@@ -3,6 +3,11 @@ typeset -U PATH path fpath
 path=("$HOME/.local/bin" "$path[@]")
 export PATH
 
+if [[ $OSTYPE == darwin* ]]; then
+    export PATH="/usr/local/opt/coreutils/libexec/gnubin:${PATH}"
+    export MANPATH="/usr/local/opt/coreutils/libexec/gnuman:${MANPATH}"
+fi
+
 if [[ $SSH_TTY ]]; then
     export TERM=xterm-256color
 fi
