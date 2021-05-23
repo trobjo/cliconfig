@@ -244,6 +244,7 @@ if [[ ! -d ${ZDOTDIR}/plugins ]]; then
     [ ! -d "${HOME}/.local/bin" ] && mkdir -p "${HOME}/.local/bin"
 fi
 source "${ZDOTDIR}/plugins/trobjo/zsh-plugin-manager/zsh-plugin-manager.zsh"
+# source "/user/gi/zsh-plugin-manager/zsh-plugin-manager.zsh"
 
 cdpath=("${XDG_CONFIG_HOME}/zsh" "${HOME}/gi" "${HOME}")
 
@@ -275,7 +276,6 @@ plug 'https://raw.githubusercontent.com/aurora/rmate/master/rmate',\
      if:'[[ $SSH_TTY ]]',\
      where:'$HOME/.local/bin/rmate',\
      ignore,\
-     postinstall:'chmod +x "${filename}" && mv ${filename} ${HOME}/.local/bin/',\
      postload:'_file_opener() {cd "\$@" > /dev/null 2>&1 && return 0; [[ -d "\$1" ]] && [[ ! -r "\$1" ]] && echo "Permission denied: \$1" && return 1; touch "\$@" > /dev/null 2>&1 && \$HOME/.local/bin/rmate "\$@" || sudo \$HOME/.local/bin/rmate "\$@"}'
 plug skywind3000/z.lua,\
      if:'command -v lua',\
@@ -285,15 +285,15 @@ plug skywind3000/z.lua,\
      postload:'_zlua_precmd() {(czmod --add "\${PWD:a}" &) }',\
      postload:'$(lua ${plugindir}/z.lua --init zsh enhanced once)'
 plug 'https://raw.githubusercontent.com/trobjo/czmod-compiled/master/czmod',\
-     if:'! command -v czmod && command -v lua',\
-     ignore,\
-     postinstall:'chmod +x "${filename}" && mv ${filename} ${HOME}/.local/bin/'
+     if:'command -v lua',\
+     where:'$HOME/.local/bin/czmod',\
+     ignore
 plug le0me55i/zsh-extract,\
      defer:'-m'
-plug 'https://github.com/junegunn/fzf/releases/download/0.26.0/fzf-0.26.0-linux_amd64.tar.gz',\
+plug 'https://github.com/junegunn/fzf/releases/download/0.27.1/fzf-0.27.1-linux_amd64.tar.gz',\
      if:'! command -v fzf',\
-     ignore,\
-     postinstall:'tar zxvf ${filename} --directory ${HOME}/.local/bin/ && rm ${filename}'
+     where:'$HOME/.local/bin/fzf',\
+     ignore
 plug 'https://github.com/BurntSushi/ripgrep/releases/download/12.1.1/ripgrep_12.1.1_amd64.deb',\
      if:'! command -v rg && command -v apt',\
      ignore,\
