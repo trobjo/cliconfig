@@ -249,8 +249,6 @@ cdpath=("${XDG_CONFIG_HOME}/zsh" "${HOME}/gi" "${HOME}")
 
 plug trobjo/zsh-completions
 plug romkatv/gitstatus, defer:'-m'
-plug zsh-users/zsh-syntax-highlighting,\
-     defer:'-m'
 plug 'zsh-users/zsh-autosuggestions',\
      defer:'-m',\
      postload:'ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=fg=5,underline',\
@@ -259,6 +257,8 @@ plug 'zsh-users/zsh-autosuggestions',\
 plug trobjo/zsh-autosuggestions-override,\
      defer:'-m',\
      if:'[[ $ZSH_AUTOSUGGEST_CLEAR_WIDGETS ]]'
+plug zsh-users/zsh-syntax-highlighting,\
+     defer:'-m'
 plug trobjo/ZshGotoSublimeCurrentDir,\
      where:'$XDG_CONFIG_HOME/sublime-text/Packages/ZshGotoSublimeCurrentDir',\
      defer:'-m',\
