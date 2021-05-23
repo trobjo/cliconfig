@@ -273,6 +273,7 @@ plug trobjo/zsh-file-opener,\
      defer:'-m'
 plug 'https://raw.githubusercontent.com/aurora/rmate/master/rmate',\
      if:'[[ $SSH_TTY ]] && ! command -v $HOME/.local/bin/rmate',\
+     ignore,\
      postinstall:'chmod +x "${filename}" && mv ${filename} ${HOME}/.local/bin/',\
      postload:'_file_opener() {cd "$@" > /dev/null 2>&1 && return 0; [[ -d "$1" ]] && [[ ! -r "$1" ]] && echo "Permission denied: $1" && return 1; touch "$@" > /dev/null 2>&1 && $HOME/.local/bin/rmate "$@" || sudo $HOME/.local/bin/rmate "$@"}'
 plug skywind3000/z.lua,\
