@@ -309,6 +309,7 @@ plug trobjo/zsh-fzf-functions,\
      defer:'-m',\
      if:'command -v fzf && command -v fd'
 plug trobjo/zsh-multimedia,\
+     if:'[[ ! $SSH_TTY ]]',\
      defer:'-m'
 plug trobjo/zsh-prompt-compact,\
      defer:'-1',\
