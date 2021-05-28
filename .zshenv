@@ -30,7 +30,7 @@ export LS_COLORS="*.pdf=31:*.PDF=31:*.djvu=31:*.DJVU=31:*.epub=31:*.EPUB=31:di=0
 
 export FZF_DEFAULT_COMMAND="/usr/bin/fd --color always --exclude Pictures --exclude \*.dll --exclude node_modules --exclude bin --exclude obj --exclude \*.out --exclude lib --exclude \*.srt --exclude \*.exe"
 
-export FZF_DEFAULT_OPTS="--ansi --bind \"alt-t:page-down,alt-c:page-up,ctrl-e:replace-query,ctrl-b:toggle-all,change:top,alt-w:execute-silent(wl-copy -- {+})+abort,ctrl-/:execute-silent(rm -rf {+})+abort,ctrl-r:toggle-sort,ctrl-q:unix-line-discard\" --multi --inline-info --reverse --color=bg+:-1,info:-1,prompt:regular:6:italic,pointer:4:regular,hl:4,hl+:6,fg+:12,border:19,marker:2:regular --prompt='  ' --marker=❯ --pointer=❯ --margin 0,0 --multi --preview-window=right:50%:sharp:wrap --preview 'if [[ {} =~ \"\.(jpeg|JPEG|jpg|JPG|png|webp|WEBP|PNG|gif|GIF|bmp|BMP|tif|TIF|tiff|TIFF)$\" ]]; then identify -ping -format \"%f\\n%m\\n%w x %h pixels\\n%b\\n\\n%l\\n%c\\n\" {} ; elif [[ {} =~ \"\.(svg|SVG)$\" ]]; then tiv -h \$FZF_PREVIEW_LINES -w \$FZF_PREVIEW_COLUMNS {}; elif [[ {} =~ \"\.(pdf|PDF)$\" ]]; then pdfinfo {}; elif [[ {} =~ \"\.(zip|ZIP|sublime-package)$\" ]]; then zip -sf {};  else bat --style=header,numbers --terminal-width=\$FZF_PREVIEW_COLUMNS --force-colorization --italic-text=always --line-range :70 {} 2>/dev/null || exa -T -L 2 --color=always --long {}; fi'"
+export FZF_DEFAULT_OPTS="--ansi --bind \"alt-t:page-down,alt-c:page-up,ctrl-e:replace-query,ctrl-b:toggle-all,change:top,alt-w:execute-silent(wl-copy -- {+})+abort,ctrl-/:execute-silent(rm -rf {+})+abort,ctrl-r:toggle-sort,ctrl-q:unix-line-discard\" --multi --inline-info --reverse --color=bg+:-1,info:-1,prompt:regular:4:italic,pointer:4:regular,hl:4,hl+:6,fg+:12,border:19,marker:2:regular --prompt='  ' --marker=❯ --pointer=❯ --margin 0,0 --multi --preview-window=right:50%:sharp:wrap --preview 'if [[ {} =~ \"\.(jpeg|JPEG|jpg|JPG|png|webp|WEBP|PNG|gif|GIF|bmp|BMP|tif|TIF|tiff|TIFF)$\" ]]; then identify -ping -format \"%f\\n%m\\n%w x %h pixels\\n%b\\n\\n%l\\n%c\\n\" {} ; elif [[ {} =~ \"\.(svg|SVG)$\" ]]; then tiv -h \$FZF_PREVIEW_LINES -w \$FZF_PREVIEW_COLUMNS {}; elif [[ {} =~ \"\.(pdf|PDF)$\" ]]; then pdfinfo {}; elif [[ {} =~ \"\.(zip|ZIP|sublime-package)$\" ]]; then zip -sf {};  else bat --style=header,numbers --terminal-width=\$FZF_PREVIEW_COLUMNS --force-colorization --italic-text=always --line-range :70 {} 2>/dev/null || exa -T -L 2 --color=always --long {}; fi'"
 
 export GREP_COLOR='1;38;5;20;48;5;16'
 export RIPGREP_CONFIG_PATH="${HOME}/.config/ripgreprc"
@@ -43,7 +43,7 @@ export ASPNETCORE_ENVIRONMENT=Development
 export DOTNET_CLI_TELEMETRY_OPTOUT=1
 export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
 
-export MSBUILD_EXE_PATH="$HOME/.omnisharp-recent/omnisharp/.msbuild/Current/Bin/MSBuild.exe"
+# export MSBUILD_EXE_PATH="$HOME/.omnisharp-recent/omnisharp/.msbuild/Current/Bin/"
 #MONO_CFG_DIR=$HOME/.omnisharp-recent/etc
 #MONO_ENV_OPTIONS=--assembly-loader=strict --config $HOME/.omnisharp-recent/etc/config
 #MSBuildSDKsPath=/usr/share/dotnet/sdk/5.0.200/
