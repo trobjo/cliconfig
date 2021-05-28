@@ -269,6 +269,9 @@ plug trobjo/zsh-wayland-utils,\
      defer:'-m',\
      if:'[[ $WAYLAND_DISPLAY ]]'
 plug trobjo/zsh-file-opener,\
+     preload:'_ZSH_FILE_OPENER_CMD=u',\
+     preload:'_ZSH_FILE_OPENER_EXCLUDE_SUFFIXES=srt,part,ytdl,vtt,log,zwc',\
+     where:'/user/gi/zsh-file-opener',\
      if:'[[ $SWAYSOCK ]]',\
      defer:'-m'
 plug 'https://raw.githubusercontent.com/aurora/rmate/master/rmate',\
@@ -289,6 +292,7 @@ plug 'https://raw.githubusercontent.com/trobjo/czmod-compiled/master/czmod',\
      where:'$HOME/.local/bin/czmod',\
      ignore
 plug le0me55i/zsh-extract,\
+     if:'[[ $SSH_TTY ]]',\
      defer:'-m'
 plug 'https://github.com/junegunn/fzf/releases/download/0.27.1/fzf-0.27.1-linux_amd64.tar.gz',\
      if:'! command -v fzf',\
