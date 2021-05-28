@@ -271,7 +271,6 @@ plug trobjo/zsh-wayland-utils,\
 plug trobjo/zsh-file-opener,\
      preload:'_ZSH_FILE_OPENER_CMD=u',\
      preload:'_ZSH_FILE_OPENER_EXCLUDE_SUFFIXES=srt,part,ytdl,vtt,log,zwc',\
-     where:'/user/gi/zsh-file-opener',\
      if:'[[ $SWAYSOCK ]]',\
      defer:'-m'
 plug 'https://raw.githubusercontent.com/aurora/rmate/master/rmate',\
