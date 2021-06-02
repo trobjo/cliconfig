@@ -270,7 +270,7 @@ plug trobjo/zsh-wayland-utils,\
      if:'[[ $WAYLAND_DISPLAY ]]'
 plug trobjo/zsh-file-opener,\
      preload:'_ZSH_FILE_OPENER_CMD=u',\
-     preload:'_ZSH_FILE_OPENER_EXCLUDE_SUFFIXES=srt,part,ytdl,vtt,log,zwc',\
+     preload:'_ZSH_FILE_OPENER_EXCLUDE_SUFFIXES=srt,part,ytdl,vtt,log,zwc,dll',\
      if:'[[ $SWAYSOCK ]]',\
      defer:'-m'
 plug 'https://raw.githubusercontent.com/aurora/rmate/master/rmate',\
@@ -278,14 +278,14 @@ plug 'https://raw.githubusercontent.com/aurora/rmate/master/rmate',\
      where:'$HOME/.local/bin/rmate',\
      ignore,\
      postload:'alias u="_file_opener"',\
-     postload:'_file_opener() {cd "\$@" > /dev/null 2>&1 && return 0; [[ -d "\$1" ]] && [[ ! -r "\$1" ]] && echo "Permission denied: \$1" && return 1; touch "\$@" > /dev/null 2>&1 && \$HOME/.local/bin/rmate "\$@" || sudo \$HOME/.local/bin/rmate "\$@"}'
+     postload:'_file_opener() {cd "\$@" > /dev/null 2>&1 && return 0; [[ -d "\$1" ]] && [[ ! -r "\$1" ]] && echo "Permission denied: \$1" && return 1; [[ -r "\$@" ]] && \$HOME/.local/bin/rmate "\$@" || sudo \$HOME/.local/bin/rmate "\$@"}'
 plug skywind3000/z.lua,\
      if:'command -v lua',\
      preload:'export _ZL_CMD=h',\
      preload:'export _ZL_DATA=${ZDOTDIR}/zlua_data',\
      ignore,\
      postload:'_zlua_precmd() {(czmod --add "\${PWD:a}" &) }',\
-     postload:'$(lua ${plugindir}/z.lua --init zsh enhanced once)'
+     postload:'$(lua ${plugin_location}/z.lua --init zsh enhanced once)'
 plug 'https://raw.githubusercontent.com/trobjo/czmod-compiled/master/czmod',\
      if:'command -v lua',\
      where:'$HOME/.local/bin/czmod',\
@@ -332,6 +332,17 @@ plug trobjo/Neovim-config,\
      if:'command -v nvim',\
      where:'$XDG_CONFIG_HOME/nvim',\
      postinstall:'nvim +PlugInstall +qall; printf "\e[6 q\n\n"',\
+     ignore
+
+plug 'https://raw.githubusercontent.com/trobjo/roslyn_analyzers/master/roslyn_analyzers.zip',\
+     if:'command -v subl && command -v dotnet',\
+     where:'${HOME}/.roslyn_analyzers',\
+     ignore
+
+plug 'https://github.com/OmniSharp/omnisharp-roslyn/releases/download/v1.37.10/omnisharp-linux-x64.tar.gz',\
+     if:'command -v subl && command -v dotnet',\
+     where:'${HOME}/.omnisharp',\
+     postinstall:'chmod +x "${where}/bin/mono" "${where}/omnisharp/OmniSharp.exe"',\
      ignore
 
 plug init
