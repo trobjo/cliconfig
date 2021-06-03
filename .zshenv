@@ -39,17 +39,12 @@ export RIPGREP_CONFIG_PATH="${HOME}/.config/ripgreprc"
 export PASSWORD_STORE_GENERATED_LENGTH=39
 export PASSWORD_STORE_X_SELECTION=primary
 
-export ASPNETCORE_ENVIRONMENT=Development
-export DOTNET_CLI_TELEMETRY_OPTOUT=1
-export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
-
-# export MSBUILD_EXE_PATH="$HOME/.omnisharp-recent/omnisharp/.msbuild/Current/Bin/"
-#MONO_CFG_DIR=$HOME/.omnisharp-recent/etc
-#MONO_ENV_OPTIONS=--assembly-loader=strict --config $HOME/.omnisharp-recent/etc/config
-#MSBuildSDKsPath=/usr/share/dotnet/sdk/5.0.200/
-#MSBuildSDKsPath=/usr/local/share/dotnet/sdk/2.2.207
-
-
+if type dotnet > /dev/null 2>&1; then
+    # export ASPNETCORE_ENVIRONMENT=Development
+    #MSBuildSDKsPath=/usr/share/dotnet/sdk/5.0.200/
+    export DOTNET_CLI_TELEMETRY_OPTOUT=1
+    export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
+fi
 
 export XDG_CONFIG_HOME="$HOME/.config"
 export ZDOTDIR="${XDG_CONFIG_HOME:-$HOME/.config}/zsh"
