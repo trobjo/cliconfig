@@ -100,7 +100,7 @@ stty -ixon quit undef           # For Vim etc; above is just for zsh.
 ## ALIASES
 #
 
-alias -g ...='$(subl --command doas_edit; cat /tmp/doasedit)'
+alias -g sf='"$(subl --command doas_edit; cat /tmp/doasedit)"'
 
 
 if command -v pacman &> /dev/null
@@ -194,7 +194,7 @@ alias gf='git fetch'
 
 alias commit='swaymsg [app_id="^PopUp$"] move scratchpad\; [app_id="^subl$"] focus > /dev/null 2>&1; git commit -v'
 alias push='git push'
-alias pull='git pull'
+alias pull='git pull --rebase'
 
 # stdout in sublime or less, or clipboard
 alias -g CC=' |& tee /dev/tty |& wl-copy -n'
@@ -210,7 +210,7 @@ else
     alias -g G=' |& grep --color=auto'
 fi
 alias -g jsonl=' | jq -C "." | less -R'
-alias -g json=' | jq -C "."'
+alias -g jqc=' | jq -C "."'
 
 # I always forget how to redirect
 alias -g silent="> /dev/null 2>&1"
@@ -218,6 +218,28 @@ alias -g noerr="2> /dev/null"
 alias -g onerr="1> /dev/null"
 alias -g stdboth="2>&1"
 
+change_font_size() {
+     sed -r -i -e\
+     "/font_size/s/$1/$2/" \
+     $XDG_CONFIG_HOME/sublime-text/Packages/User/Preferences.sublime-settings
+     sed -r -i -e\
+     "/size: $1/s/$1/$2/" \
+     $XDG_CONFIG_HOME/alacritty/alacritty.yml
+}
+
+_psql() {
+     if [[ ${1:0:1} == "d" ]]; then
+          myQuery="\\$@"
+     else
+          myQuery="$@"
+     fi
+     [[ -z ${PSQL_DB} ]] && print "PSQL_DB is unset" && return 1
+     psql -U ${PSQL_USER:-postgres} -d ${PSQL_DB} <<< "$myQuery"
+}
+alias p='noglob _psql'
+
+alias screen_share='change_font_size 9 19'
+alias no_screen_share='change_font_size 19 9'
 
 gc() {
      [ ! -d "${HOME}/gi" ] && mkdir -p "${HOME}/gi"
@@ -238,27 +260,68 @@ gc() {
      # ends with .git, we remove that
 }
 
+
+curlie() {
+     local -a myargs
+     for string in $@; do
+          if [[ $string == http* ]]; then
+               string=${string:gs/ /\%20}
+          fi
+          myargs+=$string
+     done
+     /usr/bin/curlie $myargs
+}
+
+activate() {
+     if [[ "${#@}" -eq 1 ]]; then
+          source "${1}/bin/activate" && return 0
+          return 1
+     fi
+     typeset -aU venvs
+     for file in ./.**/pyvenv.cfg; do
+          if [[ -f "$file" ]]; then
+               venvs+="${file%/*}"
+          fi
+     done
+     if [[ "${#venvs}" -eq 1 ]]; then
+          source "${venvs[@]:0}/bin/activate"
+          _OLD_VIRTUAL_PS1="$PROMPT"
+          export PROMPT="%2F%B(${VIRTUAL_ENV##/*/}) %b$PROMPT"
+     elif [[ "${#venvs}" -gt 1 ]]; then
+          print "More than one venv: \x1b[3m${venvs[@]##*/}\e[0m"
+          return 1
+     elif [[ "${#venvs}" -eq 0 ]]; then
+          print "No venv: \x1b[3m${venvs[@]##*/}\e[0m"
+          return 1
+     fi
+}
+
+# disable python's built in manipulation of the prompt in favor of our own
+export VIRTUAL_ENV_DISABLE_PROMPT=1
+
+
 if [[ ! -d ${ZDOTDIR}/plugins ]]; then
     git clone --depth=1 https://github.com/trobjo/zsh-plugin-manager 2> /dev/null "${ZDOTDIR}/plugins/trobjo/zsh-plugin-manager"
     command chmod g-rwX "${ZDOTDIR}/plugins"
     [ ! -d "${HOME}/.local/bin" ] && mkdir -p "${HOME}/.local/bin"
 fi
 source "${ZDOTDIR}/plugins/trobjo/zsh-plugin-manager/zsh-plugin-manager.zsh"
+# source "/user/gi/zsh-plugin-manager/zsh-plugin-manager.zsh"
+
 
 cdpath=("${XDG_CONFIG_HOME}/zsh" "${HOME}/gi" "${HOME}")
 
 plug trobjo/zsh-completions
 plug romkatv/gitstatus, defer:'-m'
+# plug zsh-users/zsh-syntax-highlighting
+plug zdharma/fast-syntax-highlighting
 plug 'zsh-users/zsh-autosuggestions',\
-     defer:'-m',\
      postload:'ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=fg=5,underline',\
      postload:'ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(go_home bracketed-paste-url-magic url-quote-magic
               repeat-last-command-or-complete-entry expand-or-complete)'
 plug trobjo/zsh-autosuggestions-override,\
      defer:'-m',\
      if:'[[ $ZSH_AUTOSUGGEST_CLEAR_WIDGETS ]]'
-plug zsh-users/zsh-syntax-highlighting,\
-     defer:'-m'
 plug trobjo/ZshGotoSublimeCurrentDir,\
      where:'$XDG_CONFIG_HOME/sublime-text/Packages/ZshGotoSublimeCurrentDir',\
      defer:'-m',\
@@ -300,11 +363,11 @@ plug 'https://github.com/junegunn/fzf/releases/download/0.27.1/fzf-0.27.1-linux_
 plug 'https://github.com/BurntSushi/ripgrep/releases/download/12.1.1/ripgrep_12.1.1_amd64.deb',\
      if:'! command -v rg && command -v apt',\
      ignore,\
-     postinstall:'sudo dpkg -i ${filename} && rm ${filename}'
+     postinstall:'rm ${filename}'
 plug 'https://github.com/sharkdp/fd/releases/download/v8.2.1/fd_8.2.1_amd64.deb',\
      if:'! command -v fd && command -v apt',\
      ignore,\
-     postinstall:'sudo dpkg -i ${filename} && rm ${filename}'
+     postinstall:'rm ${filename}'
 plug wfxr/forgit,\
      defer:'-m',\
      if:'command -v fzf'
@@ -351,3 +414,4 @@ if [[ -f ${ZDOTDIR}/novcs.zsh ]]; then
      # compile_or_recompile ${ZDOTDIR}/novcs.zsh
      source ${ZDOTDIR}/novcs.zsh
 fi
+
