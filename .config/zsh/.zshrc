@@ -341,7 +341,7 @@ plug 'https://raw.githubusercontent.com/aurora/rmate/master/rmate',\
      where:'$HOME/.local/bin/rmate',\
      ignore,\
      postload:'alias u="_file_opener"',\
-     postload:'_file_opener() {cd "\$@" > /dev/null 2>&1 && return 0; [[ -d "\$1" ]] && [[ ! -r "\$1" ]] && echo "Permission denied: \$1" && return 1; [[ -r "\$@" ]] && \$HOME/.local/bin/rmate "\$@" || sudo \$HOME/.local/bin/rmate "\$@"}'
+     postload:'_file_opener() {cd "\$@" > /dev/null 2>&1 && return 0; [[ -d "\$1" ]] && [[ ! -r "\$1" ]] && echo "Permission denied: \$1" && return 1; [[ -w "\$@" ]] && \$HOME/.local/bin/rmate "\$@" || sudo \$HOME/.local/bin/rmate "\$@"}'
 plug skywind3000/z.lua,\
      if:'command -v lua',\
      preload:'export _ZL_CMD=h',\
