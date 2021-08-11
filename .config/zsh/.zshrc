@@ -58,6 +58,7 @@ SAVEHIST=10000
 HISTORY_IGNORE='([bf]g *|[bf]g|disown|cd ..|cd -)' # Don't add these to the history file.
 setopt appendhistory notify
 unsetopt beep nomatch
+setopt histignorespace
 
 setopt bang_hist                # Treat The '!' Character Specially During Expansion.
 setopt inc_append_history       # Write To The History File Immediately, Not When The Shell Exits.
@@ -102,7 +103,7 @@ stty -ixon quit undef           # For Vim etc; above is just for zsh.
 
 alias -g sf='"$(subl --command doas_edit; cat /tmp/doasedit)"'
 
-
+alias ports='doas /usr/bin/netstat -tunlp'
 if command -v pacman &> /dev/null
 then
     alias Syu='doas pacman -Syu'
@@ -192,8 +193,9 @@ alias gluf='git ls-files --others --exclude-standard'
 alias ggn='git grep -n'
 alias gf='git fetch'
 
-alias commit='swaymsg [app_id="^PopUp$"] move scratchpad\; [app_id="^subl$"] focus > /dev/null 2>&1; git commit -v'
+alias commit='swaymsg [app_id="^PopUp$"] move scratchpad\; [app_id="^subl$"] focus > /dev/null 2>&1; git commit -v; swaymsg [app_id="^PopUp$"] scratchpad show, fullscreen disable, move position center, resize set width 100ppt height 100ppt, resize grow width 2px, resize shrink up 1100px, resize grow up 340px, move down 1px'
 alias push='git push'
+alias add='git add'
 alias pull='git pull --rebase'
 
 # stdout in sublime or less, or clipboard
@@ -241,7 +243,7 @@ alias p='noglob _psql'
 alias screen_share='change_font_size 9 19'
 alias no_screen_share='change_font_size 19 9'
 
-gc() {
+gch() {
      [ ! -d "${HOME}/gi" ] && mkdir -p "${HOME}/gi"
      if [[ "$PWD" == "$HOME" ]]; then
           cd "${HOME}/gi"
@@ -251,6 +253,11 @@ gc() {
           repo="$(wl-paste -n)"
      else
           repo="$1"
+     fi
+
+     if [[ "$repo" == *github.com* ]] && [[ ${repo:0:3} != "git" ]]; then
+          # we are cloning from github, therefore automatically use ssh.
+          repo="git@github.com:${${repo##*github.com/}%*/}.git"
      fi
 
      git clone "${repo}" &&\
@@ -306,7 +313,7 @@ if [[ ! -d ${ZDOTDIR}/plugins ]]; then
     [ ! -d "${HOME}/.local/bin" ] && mkdir -p "${HOME}/.local/bin"
 fi
 source "${ZDOTDIR}/plugins/trobjo/zsh-plugin-manager/zsh-plugin-manager.zsh"
-# source "/user/gi/zsh-plugin-manager/zsh-plugin-manager.zsh"
+# source "/user/code/zsh-plugin-manager/zsh-plugin-manager.zsh"
 
 
 cdpath=("${XDG_CONFIG_HOME}/zsh" "${HOME}/gi" "${HOME}")
@@ -333,8 +340,9 @@ plug trobjo/zsh-wayland-utils,\
      if:'[[ $WAYLAND_DISPLAY ]]'
 plug trobjo/zsh-file-opener,\
      preload:'_ZSH_FILE_OPENER_CMD=u',\
-     preload:'_ZSH_FILE_OPENER_EXCLUDE_SUFFIXES=srt,part,ytdl,vtt,log,zwc,dll',\
-     if:'[[ $SWAYSOCK ]]',\
+     where:'/user/code/zsh-file-opener',\
+     preload:'_ZSH_FILE_OPENER_EXCLUDE_SUFFIXES=srt,part,ytdl,vtt,log,zwc,dll,otf,ttf,iso,img,mobi',\
+     if:'[[ $WAYLAND_DISPLAY ]]',\
      defer:'-m'
 plug 'https://raw.githubusercontent.com/aurora/rmate/master/rmate',\
      if:'[[ $SSH_TTY ]]',\
@@ -379,6 +387,7 @@ plug trobjo/zsh-multimedia,\
      defer:'-m'
 plug trobjo/zsh-prompt-compact,\
      defer:'-1',\
+     where:'/user/code/zsh-prompt-compact',\
      preload:'setopt no_prompt_bang prompt_percent prompt_subst',\
      preload:'PROMPT=""',\
      preload:'[ $PopUp ] && PROHIBIT_TERM_TITLE=true',\
