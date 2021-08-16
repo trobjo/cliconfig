@@ -101,7 +101,9 @@ stty -ixon quit undef           # For Vim etc; above is just for zsh.
 ## ALIASES
 #
 
-alias -g sf='"$(subl --command doas_edit; cat /tmp/doasedit)"'
+alias -g st='"$(subl --command doas_edit; cat /tmp/doasedit)"'
+alias -g stn='echo "$(subl --command doas_edit; cat /tmp/doasedit)"'
+# alias -g stnn='echo "$(subl --command doas_edit; cat /tmp/doasedit | grep -o \'[^/]\\*$' )"'
 
 alias ports='doas /usr/bin/netstat -tunlp'
 if command -v pacman &> /dev/null
@@ -121,6 +123,7 @@ then
     alias Qqs='pacman -Qqs'
     alias Qq='pacman -Qq'
     alias Qtdq='doas pacman -Rsn $(pacman -Qtdq)'
+    zstyle ':completion:*:*:pacman:*' file-patterns "*.pkg.tar.zst:source-files"
 else
     alias -g Syu='sudo apt update && sudo apt upgrade'
     alias -g S='sudo apt install'
@@ -321,10 +324,12 @@ cdpath=("${XDG_CONFIG_HOME}/zsh" "${HOME}/gi" "${HOME}")
 plug trobjo/zsh-completions
 plug romkatv/gitstatus, defer:'-m'
 # plug zsh-users/zsh-syntax-highlighting
+plug trobjo/zsh-goodies,\
+     defer:'-m'
 plug zdharma/fast-syntax-highlighting
 plug 'zsh-users/zsh-autosuggestions',\
      postload:'ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=fg=5,underline',\
-     postload:'ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(go_home bracketed-paste-url-magic url-quote-magic
+     postload:'ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(go_to_old_pwd bracketed-paste-url-magic url-quote-magic
               repeat-last-command-or-complete-entry expand-or-complete)'
 plug trobjo/zsh-autosuggestions-override,\
      defer:'-m',\
@@ -333,8 +338,6 @@ plug trobjo/ZshGotoSublimeCurrentDir,\
      where:'$XDG_CONFIG_HOME/sublime-text/Packages/ZshGotoSublimeCurrentDir',\
      defer:'-m',\
      if:'command -v subl'
-plug trobjo/zsh-goodies,\
-     defer:'-m'
 plug trobjo/zsh-wayland-utils,\
      defer:'-m',\
      if:'[[ $WAYLAND_DISPLAY ]]'
@@ -387,7 +390,6 @@ plug trobjo/zsh-multimedia,\
      defer:'-m'
 plug trobjo/zsh-prompt-compact,\
      defer:'-1',\
-     where:'/user/code/zsh-prompt-compact',\
      preload:'setopt no_prompt_bang prompt_percent prompt_subst',\
      preload:'PROMPT=""',\
      preload:'[ $PopUp ] && PROHIBIT_TERM_TITLE=true',\
