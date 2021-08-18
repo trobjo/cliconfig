@@ -346,7 +346,6 @@ plug trobjo/zsh-wayland-utils,\
      if:'[[ $WAYLAND_DISPLAY ]]'
 plug trobjo/zsh-file-opener,\
      preload:'_ZSH_FILE_OPENER_CMD=u',\
-     where:'/user/code/zsh-file-opener',\
      preload:'_ZSH_FILE_OPENER_EXCLUDE_SUFFIXES=srt,part,ytdl,vtt,log,zwc,dll,otf,ttf,iso,img,mobi',\
      if:'[[ $WAYLAND_DISPLAY ]]',\
      defer:'-m'
