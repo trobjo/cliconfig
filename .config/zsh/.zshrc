@@ -23,6 +23,9 @@ bindkey '^[OB'  down-line-or-beginning-search
 forward-word() { [ $POSTDISPLAY ] && zle .forward-word || zle vi-forward-blank-word }
 zle -N forward-word
 bindkey "^[b" vi-backward-blank-word
+# subwords, see alaccritty config
+bindkey "^[s" backward-word
+bindkey "^[t" forward-word
 
 # Use smart URL pasting and escaping.
 autoload -Uz bracketed-paste-url-magic url-quote-magic
