@@ -412,8 +412,84 @@ plug 'https://github.com/OmniSharp/omnisharp-roslyn/releases/download/v1.37.10/o
 
 plug init
 
+if grep microsoft /proc/version; then
+     export VISUAL='/mnt/c/Program\ Files/Sublime\ Text/subl.exe'
+     export WINHOME='/mnt/c/Users/mbl3702'
+
+     export _ZSH_FILE_OPENER_CMD='u'
+     export _ZSH_FILE_OPENER_EXCLUDE_SUFFIXES='srt,part,ytdl,vtt,log,zwc,dll,otf,ttf,iso,img,mobi'
+
+     alias ${_ZSH_FILE_OPENER_CMD:-f}='_file_opener'
+
+     # If this env var is set, file_opener will not look suggest these files in the autocomplete menu
+     [[ $_ZSH_FILE_OPENER_EXCLUDE_SUFFIXES ]] &&\
+     zstyle ':completion:*:*:_file_opener:*' file-patterns "^*.(${_ZSH_FILE_OPENER_EXCLUDE_SUFFIXES//,/|}):source-files" '*:all-files'
+
+
+     _file_opener () {
+          typeset -aU arcs vscode docs dirs batstatus ret
+
+          [[ -z "$@" ]] && cd ${PREF_DIR:-} > /dev/null 2>&1 && return 0
+
+          for file in "$@"
+          do
+               if [[ ! -r "$file" ]]
+               then
+                    if [[ -e "$file" ]] || [[ ! -r "${${file:a}%/*}" ]]
+                    then
+                         local color=''
+                         ret=1
+                         if [[ -b "$file" ]] || [[ -c "$file" ]]
+                         then
+                              color="\033[1m\033[33m"
+                         elif [[ -h "$file" ]]; then
+                              color="\033[1m\033[36m"
+                         elif [[ ! -d "$file" ]]; then
+                              color="\033[0m"
+                              fi
+                              print "Permission denied: \033[3m\033[34m${${file}%"${file##*/}"}$color${file##*/}\033[0m"
+                              continue
+                         fi
+                    fi
+                    [[ -d ${file} ]] && dirs+=("$file")  && continue
+          done
+          case "${file:e:l}" in
+              (gz|tgz|bz2|tbz|tbz2|xz|txz|zma|tlz|zst|tzst|tar|lz|gz|bz2|xz|lzma|z|zip|war|jar|sublime-package|ipsw|xpi|apk|aar|whl|rar|rpm|7z|deb|zs)
+                  arcs+=(${file:a})
+                  [[ "${#@}" -eq 2 ]] && [[ ! -f "$2" ]] && { local extract_dir="$2"; break } ;;
+              (mkv|mp4|movs|mp3|avi|mpg|m4v|oga|m4a|m4b|opus|wmv)
+                  swaymsg -q '[app_id=mpv] focus' || movs+=("${file:a:q}") ;;
+              (pdf|epub|djvu)
+                  swaymsg -q "[app_id=\"^org.pwmt.zathura$\" title=\"^${(q)file##*/}\ \[\"] focus" || pdfs+=("${file:a:q}") ;;
+              (jpeg|jpg|png|webp|svg|gif|bmp|tif|tiff|psd)
+                  pics+=("${file:a:q}") ;;
+              (${~_ZSH_FILE_OPENER_EXCLUDE_SUFFIXES//,/|})
+                  print "File opener is disabled for: \033[3m\033[34m${${file}%"${file##*/}"}\033[0m${file##*/}" && ret=1 ;;
+              (html|mhtml)
+                  urls+=("${file:a:q}") ;;
+              (ipynb)
+                  vscode+=("${file:a:q}") ;;
+              (*)
+                  [[ "${#@}" -eq 2 ]] && [[ $2 -gt 0 ]] && docs+=("${file:a:q}":$2) && break
+                  docs+=("${file:a:q}") ;;
+          esac
+
+          [[ -n ${dirs} ]] && {
+               [[ ${#dirs} -eq 1 ]] && cd "$dirs" && ret=${ret:-0}  || {
+                    print "Cannot enter multiple directories: \033[3m\033[34m${dirs:gs/ /\\033[0m, \\033[3m\\033[34m}"
+                    ret=1
+               }
+          }
+
+          [[ ${vscode} ]] && $VSCODE $vscode
+
+          [[ ${docs} ]] && $VISUAL $docs
+
+          return ${ret:-0}
+     }
+fi
+
 if [[ -f ${ZDOTDIR}/novcs.zsh ]]; then
-     # compile_or_recompile ${ZDOTDIR}/novcs.zsh
      source ${ZDOTDIR}/novcs.zsh
 fi
 
