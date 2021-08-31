@@ -226,15 +226,6 @@ alias -g noerr="2> /dev/null"
 alias -g onerr="1> /dev/null"
 alias -g stdboth="2>&1"
 
-change_font_size() {
-     sed -r -i -e\
-     "/font_size/s/$1/$2/" \
-     $XDG_CONFIG_HOME/sublime-text/Packages/User/Preferences.sublime-settings
-     sed -r -i -e\
-     "/size: $1/s/$1/$2/" \
-     $XDG_CONFIG_HOME/alacritty/alacritty.yml
-}
-
 _psql() {
      if [[ ${1:0:1} == "d" ]]; then
           myQuery="\\$@"
@@ -250,27 +241,27 @@ alias screen_share='change_font_size 9 19'
 alias no_screen_share='change_font_size 19 9'
 
 gch() {
-     [ ! -d "${HOME}/gi" ] && mkdir -p "${HOME}/gi"
-     if [[ "$PWD" == "$HOME" ]]; then
-          cd "${HOME}/gi"
-     fi
+    [ ! -d "${HOME}/gi" ] && mkdir -p "${HOME}/gi"
+    if [[ "$PWD" == "$HOME" ]]; then
+        cd "${HOME}/gi"
+    fi
 
-     if [[ "${#@}" -lt 1 ]]; then
-          repo="$(wl-paste -n)"
-     else
-          repo="$1"
-     fi
+    if [[ "${#@}" -lt 1 ]]; then
+        repo="$(wl-paste -n)"
+    else
+        repo="$1"
+    fi
 
-     if [[ "$repo" == *github.com* ]] && [[ ${repo:0:3} != "git" ]]; then
-          # we are cloning from github, therefore automatically use ssh.
-          repo="git@github.com:${${repo##*github.com/}%*/}.git"
-     fi
+    if [[ "$repo" == *github.com* ]] && [[ ${repo:0:3} != "git" ]]; then
+        # we are cloning from github, therefore automatically use ssh.
+        repo="git@github.com:${${repo##*github.com/}%*/}.git"
+    fi
 
-     git clone "${repo}" &&\
-     cd "${${${repo/%\//}##*/}//.git/}"
-     # the expr is read inside out. First, if the last char is '/' ('%' means last) we replace it with ''.
-     # then we remove everything before the last '/' (string has now mutated), and finally, if the string
-     # ends with .git, we remove that
+    git clone "${repo}" &&\
+    cd "${${${repo/%\//}##*/}//.git/}"
+    # the expr is read inside out. First, if the last char is '/' ('%' means last) we replace it with ''.
+    # then we remove everything before the last '/' (string has now mutated), and finally, if the string
+    # ends with .git, we remove that
 }
 
 
@@ -318,15 +309,14 @@ if [[ ! -d ${ZDOTDIR}/plugins ]]; then
     command chmod g-rwX "${ZDOTDIR}/plugins"
     [ ! -d "${HOME}/.local/bin" ] && mkdir -p "${HOME}/.local/bin"
 fi
+
 source "${ZDOTDIR}/plugins/trobjo/zsh-plugin-manager/zsh-plugin-manager.zsh"
-# source "/user/code/zsh-plugin-manager/zsh-plugin-manager.zsh"
 
 
 cdpath=("${XDG_CONFIG_HOME}/zsh" "${HOME}/gi" "${HOME}")
 
 plug trobjo/zsh-completions
 plug romkatv/gitstatus, defer:'-m'
-# plug zsh-users/zsh-syntax-highlighting
 plug trobjo/zsh-goodies,\
      defer:'-m'
 plug zdharma/fast-syntax-highlighting
