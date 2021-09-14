@@ -2,11 +2,11 @@
 ...
 --smart-case
 --colors
-match:bg:16
+match:bg:6
 --colors
-match:fg:20
+match:fg:231
 --colors
-line:fg:18
+line:fg:249
 --colors
 line:style:nobold
 --colors
